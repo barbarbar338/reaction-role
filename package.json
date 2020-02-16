@@ -1,7 +1,7 @@
 {
   "name": "reaction-role",
   "version": "1.4.1",
-  "description": "A simple Node app built on Express, instantly up and running.",
+  "description": "ReactionRole is a module that allows you to create reaction role easily! It also has several functions for you to use.",
   "main": "reactionRole.js",
   "scripts": {
     "test": "THIS IS JUST A NPM PACKAGE PLS USE IT LIKE A NORMAL PACKAGE LOL",
