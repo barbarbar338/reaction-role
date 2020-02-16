@@ -1,6 +1,6 @@
 {
   "name": "reaction-role",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "ReactionRole is a module that allows you to create reaction role easily! It also has several functions for you to use.",
   "main": "reactionRole.js",
   "scripts": {
