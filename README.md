@@ -1,7 +1,7 @@
 Discord ReactionRole System
 =================
 
-<p>**ReactionRole** is a module that allows you to create reaction role easily! It also has several functions for you to use.</p>
+<p><b>ReactionRole</b> is a module that allows you to create reaction role easily! It also has several functions for you to use.</p>
 <p>This module is compatible with all node.js discord modules (like discord.js, eris, discord.js-commando etc.)</p>
 <p>You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!</p>
 
