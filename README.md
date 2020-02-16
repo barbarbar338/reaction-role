@@ -16,7 +16,7 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 
 /* Reaction Role Packages */
-const ReactionRole = require("./reactionRole.js");
+const ReactionRole = require("reaction-role");
 const reactionRole = new ReactionRole(client); // also you can specify a bot token like "new ReactionRole("TOKEN");"
 
 /**
@@ -86,7 +86,7 @@ client.login("TOKEN");
 ```js
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const ReactionRole = require("./reactionRole.js");
+const ReactionRole = require("reaction-role");
 const reactionRole = new ReactionRole(client); // also you can specify a bot token like "new ReactionRole("TOKEN");"
 
 let option1 = reactionRole.createOption("✅", "606046163564494859", "604212225493696512");
@@ -101,7 +101,7 @@ client.login("TOKEN");
 <p>And finally our simplest example</p>
 
 ```js
-const ReactionRole = require("./reactionRole.js");
+const ReactionRole = require("reaction-role");
 const reactionRole = new ReactionRole("TOKEN"); // also you can specify a Discord.js Bot Client like "new ReactionRole(client);"
 
 let option1 = reactionRole.createOption("✅", "606046163564494859", "604212225493696512");
