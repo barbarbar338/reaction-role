@@ -4,7 +4,7 @@ const client = new Discord.Client();
 
 /* Reaction Role Packages */
 const ReactionRole = require("./reactionRole.js");
-const reactionRole = new ReactionRole(client);
+const reactionRole = new ReactionRole("NjA5NzAwNTY2MTQyMTU2ODAw.XkhT5g.mrmD95a2A4qYF6YmauRnWGkcsKg");
 
 /**
   * Creating Options 
@@ -35,7 +35,7 @@ reactionRole.createMessage("678345974460186651", "675657998907211787", false, op
 reactionRole.init();
 
 /**
-  * 24/7 Host System 
+  * 24/7 Host System (You don't have to use this line of code)
   * If you're using "https://glitch.com/" for the hosting you can use this function for 24/7 host your project!
   * Example: reactionRole.host(PORT, HTML_FILE);
   * PORT must be an Integer like "3000" or "8080"
@@ -43,6 +43,27 @@ reactionRole.init();
   * Note: If you look at the "/stats" directory you can see the statistics of your bot
   */
 reactionRole.host(3000);
+
+/**
+  * Webhook Creator (You don't have to use this line of code)
+  * Creates Webhook with specified Webhook URL
+  * Example: reactionRole.createWebhook("WEBHOOK_URL");
+  * WEBHOOK_URL must be a Discord Webhook URL
+  * Note: You can use Webhooks like Channel (https://discord.js.org/#/docs/main/stable/class/Channel)
+  * Which means you can use webhooks like "webhook.send("MESSAGE");"
+  */
+let hook = reactionRole.createWebhook("https://discordapp.com/api/webhooks/678330133819555865/T9li3ESR7yJuzjv8tltrUEdZINlk5M1Dhl0u7dwLhB1PkHH_YQV90dNOS3WI5JhQ9LrY");
+console.log(hook)
+
+/**
+  * Message Interval Creator (You don't have to use this line of code)
+  * Sends the message you specified to the webhook you specified within the specified time
+  * Example: reactionRole.intervalMessage(WEBHOOK, TIME, MESSAGE)
+  * WEBHOOK must be a ReactionRole Webhook (reactionRole.createWebhook("WEBHOOK_URL"))
+  * TIME must be a Bit Time like 1000 * 60 * 30 = 30 minutes (ms * s * m * h * d * w)
+  * MESSAGE must be a string like "Hello world!" or an embed like "embed: { description: "Hello world!" }"
+  */
+//reactionRole.intervalMessage(hook, 1000*3, "lol")
 
 /* Logging In */
 client.login("NjA5NzAwNTY2MTQyMTU2ODAw.XkhT5g.mrmD95a2A4qYF6YmauRnWGkcsKg");

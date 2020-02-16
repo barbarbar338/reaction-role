@@ -6,8 +6,17 @@ require("moment-duration-format");
 
 class ReactionRole {
   constructor(client) {
-    this.client = client;
     this.config = [];
+    if (typeof client == "string") {
+      this.client = new Discord.Client();
+      this.client.login(client).catch(err => {
+        throw new Error("[ReactionRole] Please specify a VALID Bot token")
+      })
+    } else if (typeof client == "object") {
+      this.client = client;
+    } else {
+      throw new Error("[ReactionRole] Please specify a Discord.js Client or Bot Token")
+    }
   }
   
   init() {
@@ -17,7 +26,7 @@ class ReactionRole {
 				var debug_count_messagesFetched = 0;
 				for (var { channel, message: message_id, reactions } of this.config) {
 					var message = await this.client.channels.get(channel).fetchMessage(message_id)
-						.catch(error => console.error(error));
+						.catch(error => {throw new Error("[ReactionRole] " + error)});
 					if (!message) continue;
 					debug_count_messagesFetched += 1;
 					for (var {emoji} of reactions) {
@@ -25,12 +34,12 @@ class ReactionRole {
 						var messageReaction = message.reactions.get(emoji);
 						if (!messageReaction) {
 							await message.react(emoji)
-								.catch(error => console.error(error));
+								.catch(error => {throw new Error("[ReactionRole] " + error)});
 						} else {
 							if (!messageReaction.me) {
 								messageReaction.fetchUsers();
 								await message.react(emoji)
-									.catch(error => console.error(error));
+									.catch(error => {throw new Error("[ReactionRole] " + error)});
 							}
 						}
 					}
@@ -66,9 +75,9 @@ class ReactionRole {
 					}
 					rolesNew.push.apply(rolesNew, rolesWhitelist);
 					await member.setRoles(rolesNew)
-						.catch(error => console.error(error));
+						.catch(error => {throw new Error("[ReactionRole] " + error)});
 					if (disjoint) await messageReaction.remove(user)
-						.catch(error => console.error(error));
+						.catch(error => {throw new Error("[ReactionRole] " + error)});
 				}
 			})();
 		})
@@ -95,7 +104,7 @@ class ReactionRole {
 						(member.roles.get(role))
 					);
 					await member.removeRoles(rolesToRemove)
-						.catch(error => console.error(error));
+						.catch(error => {throw new Error("[ReactionRole] " + error)});
 				}
 			})();
 		});
@@ -161,8 +170,6 @@ class ReactionRole {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link href="navbar.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
   </head>
@@ -203,6 +210,8 @@ class ReactionRole {
         <p class="lead">ReactionRole is a module that allows you to create reaction role easily! It also has several functions for you to use.</p>
       </div>
     </header>
+  
+    <div class="container"><h1 class="text-center"><a href="https://www.is-my.fun/ulas" target="_blank">Contact Me For More Help</a></h1></div>
     
     <footer class="page-footer font-small blue pt-4">
     <div class="footer-copyright text-center py-3">
@@ -213,7 +222,6 @@ class ReactionRole {
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script src="navbar.js"></script>
   </body>
 </html>
 `);
@@ -240,6 +248,22 @@ class ReactionRole {
       });
     });
   }
+  
+  createWebhook(webhook_url) {
+    if (!webhook_url.includes("discordapp") || !webhook_url.includes("api") || !webhook_url.includes("webhooks")) throw new Error("[ReactionRole] Please specify a valid Discord Webhook URL")
+    webhook_url = webhook_url.split("/");
+    const hook = new Discord.WebhookClient(webhook_url[5], webhook_url[6]);
+    hook.auth = true
+    return hook
+  }
+  
+  intervalMessage(webhook, time, message) {
+    if (!webhook.auth) throw new Error("[ReactionRole] Please use a ReactionRole Webhook")
+    setInterval(() => {
+      webhook.send(message)
+    }, time)
+  }
+  
 }
 
 
