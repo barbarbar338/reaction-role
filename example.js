@@ -3,8 +3,8 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 
 /* Reaction Role Packages */
-const ReactionRole = require("./reactionRole.js");
-const reactionRole = new ReactionRole("NjA5NzAwNTY2MTQyMTU2ODAw.XkhT5g.mrmD95a2A4qYF6YmauRnWGkcsKg");
+const ReactionRole = require("reaction-role");
+const reactionRole = new ReactionRole(client);
 
 /**
   * Creating Options 
@@ -63,7 +63,7 @@ console.log(hook)
   * TIME must be a Bit Time like 1000 * 60 * 30 = 30 minutes (ms * s * m * h * d * w)
   * MESSAGE must be a string like "Hello world!" or an embed like "embed: { description: "Hello world!" }"
   */
-//reactionRole.intervalMessage(hook, 1000*3, "lol")
+reactionRole.intervalMessage(hook, 1000*3, "lol")
 
 /* Logging In */
-client.login("NjA5NzAwNTY2MTQyMTU2ODAw.XkhT5g.mrmD95a2A4qYF6YmauRnWGkcsKg");
+client.login("TOKEN");
