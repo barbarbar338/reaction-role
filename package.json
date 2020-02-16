@@ -13,5 +13,8 @@
     "express": "^4.17.1",
     "moment-duration-format": "^2.2.2"
   },
+  "repository": {
+    "url": "https://github.com/barbarbar338/reaction-role"
+  },
   "license": "MIT"
 }
