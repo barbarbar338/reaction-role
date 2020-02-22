@@ -3,8 +3,8 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 
 /* Reaction Role Packages */
-const ReactionRole = require("./reactionRole.js");
-const reactionRole = new ReactionRole(client);
+const ReactionRole = require("reaction-role");
+const reactionRole = new ReactionRole.Main(client);
 
 /**
  * Exporting Client
@@ -12,6 +12,17 @@ const reactionRole = new ReactionRole(client);
  * Example: const bot = reactionRole.Client();
  */
 const bot = reactionRole.Client();
+
+/*
+ * Creating Collections
+ * You can create colections and save datas to them xd
+ * Example: const collection = new ReactionRole.Collection();
+ * You can set datas like "collection.set("data_name", "data_value")"
+ * You can use your data like "collection.get("data_name")" => this code returns the value of "data_name" data
+ */
+const collection = new ReactionRole.Collection();
+collection.set("ReactionRole", "https://www.npmjs.com/package/reaction-role")
+console.log(collection.get("ReactionRole")) // => https://www.npmjs.com/package/reaction-role
 
 /**
   * Creating Options 
@@ -49,7 +60,7 @@ reactionRole.init();
   * HTML_FILE must be a HTML file like "index.html" (not required)
   * Note: If you look at the "/stats" directory you can see the statistics of your bot
   */
-//reactionRole.host(3000);
+reactionRole.host(3000);
 
 /**
   * Webhook Creator (You don't have to use this line of code)
@@ -69,7 +80,7 @@ let hook = reactionRole.createWebhook("https://discordapp.com/api/webhooks/67833
   * TIME must be a Bit Time like 1000 * 60 * 30 = 30 minutes (ms * s * m * h * d * w)
   * MESSAGE must be a string like "Hello world!" or an embed like "embed: { description: "Hello world!" }"
   */
-//reactionRole.intervalMessage(hook, 1000*3, "lol")
+reactionRole.intervalMessage(hook, 1000*3, "lol")
 
 /* Logging In */
 client.login("TOKEN");
