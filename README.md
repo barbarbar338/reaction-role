@@ -17,7 +17,7 @@ const client = new Discord.Client();
 
 /* Reaction Role Packages */
 const ReactionRole = require("reaction-role");
-const reactionRole = new ReactionRole(client); // also you can specify a bot token like "new ReactionRole("TOKEN");"
+const reactionRole = new ReactionRole.Main(client); // also you can specify a bot token like "new ReactionRole("TOKEN");"
 
 /**
  * Exporting Client
@@ -25,6 +25,17 @@ const reactionRole = new ReactionRole(client); // also you can specify a bot tok
  * Example: const bot = reactionRole.Client();
  */
 const bot = reactionRole.Client();
+
+/*
+ * Creating Collections
+ * You can create colections and save datas to them xd
+ * Example: const collection = new ReactionRole.Collection();
+ * You can set datas like "collection.set("data_name", "data_value")"
+ * You can use your data like "collection.get("data_name")" => this code returns the value of "data_name" data
+ */
+const collection = new ReactionRole.Collection();
+collection.set("ReactionRole", "https://www.npmjs.com/package/reaction-role")
+console.log(collection.get("ReactionRole")) // => https://www.npmjs.com/package/reaction-role
 
 /**
   * Creating Options 
@@ -94,7 +105,7 @@ client.login("TOKEN");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const ReactionRole = require("reaction-role");
-const reactionRole = new ReactionRole(client); // also you can specify a bot token like "new ReactionRole("TOKEN");"
+const reactionRole = new ReactionRole.Main(client); // also you can specify a bot token like "new ReactionRole("TOKEN");"
 
 let option1 = reactionRole.createOption("✅", "606046163564494859", "604212225493696512");
 let option2 = reactionRole.createOption("spotify:598532266515496970", "604212225493696512", "606046163564494859");
@@ -109,7 +120,7 @@ client.login("TOKEN");
 
 ```js
 const ReactionRole = require("reaction-role");
-const reactionRole = new ReactionRole("TOKEN"); // also you can specify a Discord.js Bot Client like "new ReactionRole(client);"
+const reactionRole = new ReactionRole.Main("TOKEN"); // also you can specify a Discord.js Bot Client like "new ReactionRole(client);"
 const client = reactionRole.Client();
 
 let option1 = reactionRole.createOption("✅", "606046163564494859", "604212225493696512");

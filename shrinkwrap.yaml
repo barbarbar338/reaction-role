@@ -1,9 +1,14 @@
 dependencies:
+  '@discordjs/collection': 0.1.4
   discord.js: 11.5.1
   express: 4.17.1
   moment: 2.24.0
   moment-duration-format: 2.3.2
 packages:
+  /@discordjs/collection/0.1.4:
+    dev: false
+    resolution:
+      integrity: sha512-AwCjNahVqASGv5mxnZCC0DfcV/hkAV/U7edUB0K+20xx7v0ZfQ3/o02bNROzpNjvfak5pM8KO5SCmJVK90e3lQ==
   /accepts/1.3.7:
     dependencies:
       mime-types: 2.1.26
@@ -451,6 +456,7 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
+  '@discordjs/collection': ^0.1.1
   discord.js: ^11.5.1
   express: ^4.17.1
   moment: ^2.24.0
