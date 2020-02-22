@@ -264,6 +264,9 @@ class ReactionRole {
     }, time)
   }
   
+  Client() {
+    return this.client;
+  }
 }
 
 

@@ -20,6 +20,13 @@ const ReactionRole = require("reaction-role");
 const reactionRole = new ReactionRole(client); // also you can specify a bot token like "new ReactionRole("TOKEN");"
 
 /**
+ * Exporting Client
+ * You can export your bot client with these line of codes lol
+ * Example: const bot = reactionRole.Client();
+ */
+const bot = reactionRole.Client();
+
+/**
   * Creating Options 
   * You can add unlimited amounts of role ID's
   * Example: let option = reactionRole.createOption("EMOJI", "ROLE_ID_1", "ROLE_ID_2", "ROLE_ID_3", ...);
@@ -103,6 +110,7 @@ client.login("TOKEN");
 ```js
 const ReactionRole = require("reaction-role");
 const reactionRole = new ReactionRole("TOKEN"); // also you can specify a Discord.js Bot Client like "new ReactionRole(client);"
+const client = reactionRole.Client();
 
 let option1 = reactionRole.createOption("✅", "606046163564494859", "604212225493696512");
 let option2 = reactionRole.createOption("spotify:598532266515496970", "604212225493696512", "606046163564494859");

@@ -3,8 +3,15 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 
 /* Reaction Role Packages */
-const ReactionRole = require("reaction-role");
+const ReactionRole = require("./reactionRole.js");
 const reactionRole = new ReactionRole(client);
+
+/**
+ * Exporting Client
+ * You can export your bot client with these line of codes lol
+ * Example: const bot = reactionRole.Client();
+ */
+const bot = reactionRole.Client();
 
 /**
   * Creating Options 
@@ -25,7 +32,7 @@ let option2 = reactionRole.createOption("spotify:598532266515496970", "604212225
   * DISJOINT must be a Boolean like "false" or "true"
   * option must be a reactionRole option like "reactionRole.createOption("EMOJI", "ROLE_ID_1", "ROLE_ID_2", "ROLE_ID_3", ...)"
   */
-reactionRole.createMessage("678345974460186651", "675657998907211787", false, option1, option2);
+reactionRole.createMessage("680798622102585344", "675657998907211787", false, option1, option2);
 
 /**
   * Initialize The System
@@ -42,7 +49,7 @@ reactionRole.init();
   * HTML_FILE must be a HTML file like "index.html" (not required)
   * Note: If you look at the "/stats" directory you can see the statistics of your bot
   */
-reactionRole.host(3000);
+//reactionRole.host(3000);
 
 /**
   * Webhook Creator (You don't have to use this line of code)
@@ -53,7 +60,6 @@ reactionRole.host(3000);
   * Which means you can use webhooks like "webhook.send("MESSAGE");"
   */
 let hook = reactionRole.createWebhook("https://discordapp.com/api/webhooks/678330133819555865/T9li3ESR7yJuzjv8tltrUEdZINlk5M1Dhl0u7dwLhB1PkHH_YQV90dNOS3WI5JhQ9LrY");
-console.log(hook)
 
 /**
   * Message Interval Creator (You don't have to use this line of code)
@@ -63,7 +69,7 @@ console.log(hook)
   * TIME must be a Bit Time like 1000 * 60 * 30 = 30 minutes (ms * s * m * h * d * w)
   * MESSAGE must be a string like "Hello world!" or an embed like "embed: { description: "Hello world!" }"
   */
-reactionRole.intervalMessage(hook, 1000*3, "lol")
+//reactionRole.intervalMessage(hook, 1000*3, "lol")
 
 /* Logging In */
 client.login("TOKEN");
