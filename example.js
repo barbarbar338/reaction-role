@@ -37,13 +37,12 @@ let option2 = reactionRole.createOption("spotify:598532266515496970", "604212225
 /**
   * Creating New Reaction Role Message 
   * You can add unlimited amounts of option
-  * Example: reactionRole.create("MESSAGE_ID", "CHANNEL_ID", "DISJOINT", option1, option2, option3, ...);
+  * Example: reactionRole.create("MESSAGE_ID", "CHANNEL_ID", option1, option2, option3, ...);
   * MESSAGE_ID must be a Snowflake like "678345974460186651" (a normal channel ID)
   * CHANNEL_ID must be a Snoflake like "675657998907211787" (a normal channel ID)
-  * DISJOINT must be a Boolean like "false" or "true"
   * option must be a reactionRole option like "reactionRole.createOption("EMOJI", "ROLE_ID_1", "ROLE_ID_2", "ROLE_ID_3", ...)"
   */
-reactionRole.createMessage("680798622102585344", "675657998907211787", false, option1, option2);
+reactionRole.createMessage("686872385973911552", "675657998907211787", option1, option2);
 
 /**
   * Initialize The System
@@ -80,7 +79,7 @@ let hook = reactionRole.createWebhook("https://discordapp.com/api/webhooks/67833
   * TIME must be a Bit Time like 1000 * 60 * 30 = 30 minutes (ms * s * m * h * d * w)
   * MESSAGE must be a string like "Hello world!" or an embed like "embed: { description: "Hello world!" }"
   */
-reactionRole.intervalMessage(hook, 1000*3, "lol")
+//reactionRole.intervalMessage(hook, 1000*3, "lol")
 
 /* Logging In */
 client.login("TOKEN");

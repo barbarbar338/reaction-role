@@ -1,10 +1,12 @@
 Discord ReactionRole System
 =================
 
-<p><b>ReactionRole</b> is a module that allows you to create reaction role easily! It also has several functions for you to use.</p>
+<p><b>ReactionRole</b> is a module that allows you to create Discord reaction role easily! It also has several functions for you to use.</p>
 <p>This module is compatible with all node.js discord modules (like discord.js, eris, discord.js-commando etc.)</p>
 <p>You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!</p>
 
+<b>[NPM Page](https://www.npmjs.com/package/reaction-role)</b>
+-------
 
 Usage
 ------------
@@ -50,13 +52,12 @@ let option2 = reactionRole.createOption("spotify:598532266515496970", "604212225
 /**
   * Creating New Reaction Role Message 
   * You can add unlimited amounts of option
-  * Example: reactionRole.create("MESSAGE_ID", "CHANNEL_ID", "DISJOINT", option1, option2, option3, ...);
+  * Example: reactionRole.create("MESSAGE_ID", "CHANNEL_ID", option1, option2, option3, ...);
   * MESSAGE_ID must be a Snowflake like "678345974460186651" (a normal channel ID)
   * CHANNEL_ID must be a Snoflake like "675657998907211787" (a normal channel ID)
-  * DISJOINT must be a Boolean like "false" or "true"
   * option must be a reactionRole option like "reactionRole.createOption("EMOJI", "ROLE_ID_1", "ROLE_ID_2", "ROLE_ID_3", ...)"
   */
-reactionRole.createMessage("678345974460186651", "675657998907211787", false, option1, option2);
+reactionRole.createMessage("678345974460186651", "675657998907211787", option1, option2);
 
 /**
   * Initialize The System
@@ -109,7 +110,7 @@ const reactionRole = new ReactionRole.Main(client); // also you can specify a bo
 
 let option1 = reactionRole.createOption("✅", "606046163564494859", "604212225493696512");
 let option2 = reactionRole.createOption("spotify:598532266515496970", "604212225493696512", "606046163564494859");
-reactionRole.createMessage("678345974460186651", "675657998907211787", false, option1, option2);
+reactionRole.createMessage("678345974460186651", "675657998907211787", option1, option2);
 
 reactionRole.init();
 client.login("TOKEN");
@@ -125,7 +126,7 @@ const client = reactionRole.Client();
 
 let option1 = reactionRole.createOption("✅", "606046163564494859", "604212225493696512");
 let option2 = reactionRole.createOption("spotify:598532266515496970", "604212225493696512", "606046163564494859");
-reactionRole.createMessage("678345974460186651", "675657998907211787", false, option1, option2);
+reactionRole.createMessage("678345974460186651", "675657998907211787", option1, option2);
 
 reactionRole.init();
 client.login("TOKEN");

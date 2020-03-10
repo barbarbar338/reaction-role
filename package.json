@@ -1,15 +1,15 @@
 {
   "name": "reaction-role",
-  "version": "1.5.1",
-  "description": "ReactionRole is a module that allows you to create reaction role easily! It also has several functions for you to use.",
+  "version": "1.6.2",
+  "description": "ReactionRole is a module that allows you to create Discord reaction role easily! It also has several functions for you to use.",
   "main": "reactionRole.js",
   "scripts": {
     "test": "THIS IS JUST A NPM PACKAGE PLS USE IT LIKE A NORMAL PACKAGE LOL",
     "start": "node example.js"
   },
   "dependencies": {
-    "@discordjs/collection": "^0.1.1",
-    "discord.js": "^11.5.1",
+    "@discordjs/collection": "^0.1.5",
+    "discord.js": "^12.0.2",
     "moment": "^2.24.0",
     "express": "^4.17.1",
     "moment-duration-format": "^2.2.2"
@@ -17,5 +17,13 @@
   "repository": {
     "url": "https://github.com/barbarbar338/reaction-role"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "discord",
+    "bot",
+    "reaction",
+    "role",
+    "reaction-role",
+    "discord-bot"
+  ]
 }
