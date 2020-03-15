@@ -19,6 +19,34 @@ class ReactionRole {
       throw new Error("[ReactionRole] Please specify a Discord.js Client or Bot Token");
     }
   }
+  reInit() {
+    console.log("[ReactionRole] Fetching Messages");
+    (async () => {
+      var debug_count_messagesFetched = 0;
+      for (var { channel, message: message_id, reactions } of this.config) {
+        var message = await this.client.channels.cache.get(channel).messages.fetch(message_id)
+          .catch(error => {throw new Error("[ReactionRole] " + error)});
+        if (!message) continue;
+        debug_count_messagesFetched += 1;
+        for (var {emoji} of reactions) {
+          emoji = this.cleanEmojiDiscriminator(emoji);
+          var messageReaction = message.reactions.cache.get(emoji);
+          if (!messageReaction) {
+            await message.react(emoji)
+              .catch(error => {throw new Error("[ReactionRole] " + error)});
+          } else {
+            if (!messageReaction.me) {
+              messageReaction.fetchUsers();
+              await message.react(emoji)
+                .catch(error => {throw new Error("[ReactionRole] " + error)});
+            }
+          }
+        }
+      }
+      console.log(`[ReactionRole] ${debug_count_messagesFetched} messages fetched`);
+      console.log("[ReactionRole] System is ready to rock!");  
+    })();
+  }
   init() {
     this.client.on("ready", () => {
 			console.log("[ReactionRole] Fetching Messages");

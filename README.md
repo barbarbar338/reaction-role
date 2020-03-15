@@ -67,6 +67,13 @@ reactionRole.createMessage("678345974460186651", "675657998907211787", option1, 
 reactionRole.init();
 
 /**
+  * ReInitialize The System
+  * This line of code runs the whole system
+  * Example: reactionRole.init();
+  */
+reactionRole.reInit();
+
+/**
   * 24/7 Host System (You don't have to use this line of code)
   * If you're using "https://glitch.com/" for the hosting you can use this function for 24/7 host your project!
   * Example: reactionRole.host(PORT, HTML_FILE);
