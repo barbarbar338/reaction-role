@@ -11,12 +11,12 @@ class ReactionRole {
     if (typeof client == "string") {
       this.client = new Discord.Client();
       this.client.login(client).catch(err => {
-        throw new Error("[ReactionRole] Please specify a VALID Bot token");
+        throw new Error("[ReactionRole] Please specify a VALID Bot token" + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh");
       })
     } else if (typeof client == "object") {
       this.client = client;
     } else {
-      throw new Error("[ReactionRole] Please specify a Discord.js Client or Bot Token");
+      throw new Error("[ReactionRole] Please specify a Discord.js Client or Bot Token" + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh");
     }
   }
   reInit() {
@@ -25,7 +25,7 @@ class ReactionRole {
       var debug_count_messagesFetched = 0;
       for (var { channel, message: message_id, reactions } of this.config) {
         var message = await this.client.channels.cache.get(channel).messages.fetch(message_id)
-          .catch(error => {throw new Error("[ReactionRole] " + error)});
+          .catch(error => {throw new Error("[ReactionRole] " + error + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh")});
         if (!message) continue;
         debug_count_messagesFetched += 1;
         for (var {emoji} of reactions) {
@@ -33,12 +33,12 @@ class ReactionRole {
           var messageReaction = message.reactions.cache.get(emoji);
           if (!messageReaction) {
             await message.react(emoji)
-              .catch(error => {throw new Error("[ReactionRole] " + error)});
+              .catch(error => {throw new Error("[ReactionRole] " + error + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh")});
           } else {
             if (!messageReaction.me) {
               messageReaction.fetchUsers();
               await message.react(emoji)
-                .catch(error => {throw new Error("[ReactionRole] " + error)});
+                .catch(error => {throw new Error("[ReactionRole] " + error + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh")});
             }
           }
         }
@@ -54,7 +54,7 @@ class ReactionRole {
 				var debug_count_messagesFetched = 0;
 				for (var { channel, message: message_id, reactions } of this.config) {
 					var message = await this.client.channels.cache.get(channel).messages.fetch(message_id)
-						.catch(error => {throw new Error("[ReactionRole] " + error)});
+						.catch(error => {throw new Error("[ReactionRole] " + error + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh")});
 					if (!message) continue;
 					debug_count_messagesFetched += 1;
 					for (var {emoji} of reactions) {
@@ -62,12 +62,12 @@ class ReactionRole {
 						var messageReaction = message.reactions.cache.get(emoji);
 						if (!messageReaction) {
 							await message.react(emoji)
-								.catch(error => {throw new Error("[ReactionRole] " + error)});
+								.catch(error => {throw new Error("[ReactionRole] " + error + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh")});
 						} else {
 							if (!messageReaction.me) {
 								messageReaction.fetchUsers();
 								await message.react(emoji)
-									.catch(error => {throw new Error("[ReactionRole] " + error)});
+									.catch(error => {throw new Error("[ReactionRole] " + error + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh")});
 							}
 						}
 					}
@@ -97,7 +97,7 @@ class ReactionRole {
 					}
 					rolesNew.push.apply(rolesNew, rolesWhitelist);
 					await member.roles.add(rolesNew)
-						.catch(error => {throw new Error("[ReactionRole] " + error);});
+						.catch(error => {throw new Error("[ReactionRole] " + error + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh");});
 				}
 			})();
 		});
@@ -122,7 +122,7 @@ class ReactionRole {
 						(member.roles.cache.get(role))
 					);
 					await member.roles.remove(rolesToRemove)
-						.catch(error => {throw new Error("[ReactionRole] " + error)});
+						.catch(error => {throw new Error("[ReactionRole] " + error + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh")});
 				}
 			})();
 		});
@@ -248,14 +248,14 @@ class ReactionRole {
     });
   }
   createWebhook(webhook_url) {
-    if (!webhook_url.includes("discordapp") || !webhook_url.includes("api") || !webhook_url.includes("webhooks")) throw new Error("[ReactionRole] Please specify a valid Discord Webhook URL");
+    if (!webhook_url.includes("discordapp") || !webhook_url.includes("api") || !webhook_url.includes("webhooks")) throw new Error("[ReactionRole] Please specify a valid Discord Webhook URL" + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh");
     webhook_url = webhook_url.split("/");
     const hook = new Discord.WebhookClient(webhook_url[5], webhook_url[6]);
     hook.auth = true;
     return hook;
   }
   intervalMessage(webhook, time, message) {
-    if (!webhook.auth) throw new Error("[ReactionRole] Please use a ReactionRole Webhook");
+    if (!webhook.auth) throw new Error("[ReactionRole] Please use a ReactionRole Webhook" + " \n\nFOR MORE ADVANCED HELP: https://discord.com/invite/BjEJFwh");
     setInterval(() => {
       webhook.send(message)
     }, time);

@@ -5,6 +5,9 @@ Discord ReactionRole System
 <p>This module is compatible with all node.js discord modules (like discord.js, eris, discord.js-commando etc.)</p>
 <p>You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!</p>
 
+<b>[Discord: https://discord.com/invite/BjEJFwh](https://discord.com/invite/BjEJFwh)</b>
+-------
+
 <b>[NPM Page](https://www.npmjs.com/package/reaction-role)</b>
 -------
 
