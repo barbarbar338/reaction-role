@@ -64,7 +64,7 @@ reactionRole.reInit();
 
 ```js
 const ReactionRole = require("reaction-role");
-const reactionRole = new ReactionRole.Main("TOKEN");
+const reactionRole = new ReactionRole("TOKEN");
 
 let option1 = reactionRole.createOption("✅", "606046163564494859", "604212225493696512");
 let option2 = reactionRole.createOption("spotify:598532266515496970", "604212225493696512", "606046163564494859");
