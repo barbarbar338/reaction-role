@@ -1,8 +1,10 @@
 const ReactionRole = require(".");
-const reactionRole = new ReactionRole("NTkwNzk4MTcyNjcwOTE4NjY5.Xu91iA.trM8YH7NpP4umusk8Bpwy-CxONE");
+const reactionRole = new ReactionRole("TOKEN");
 
-let option1 = reactionRole.createOption("✅", "714542230135767060");
-let option2 = reactionRole.createOption("cuteknife:715959996029993009", "717633838616018944");
-reactionRole.createMessage("724296760129749014", "717628563813171260", false, option1, option2);
+let option1 = reactionRole.createOption("✅", "697809380137107478");
+let option2 = reactionRole.createOption("rifcat:720623460321198152", "708355720436777033");
+let option3 = reactionRole.createOption("eywreyiz:720623464507244576", "703908514887761930");
+
+reactionRole.createMessage("727272497157898372", "702115562158948432", 2, [ "MANAGE_GUILD" ], option1, option2, option3);
 
 reactionRole.init();

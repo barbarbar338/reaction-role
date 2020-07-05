@@ -1,13 +1,24 @@
 const SuperError = require("../classes/SuperError");
 
 module.exports = async (self) => {
-    self.client.on("messageReactionAdd", async(reaction, user) => {
-        if (self.client.user.equals(user)) return;
+    let { client, config } = self; 
+
+    client.on("messageReactionAdd", async(reaction, user) => {
+        if (client.user.equals(user)) return;
         let member = reaction.message.guild.members.cache.get(user.id);
-        
+        if (!member) return;
+
         let cleanEmoji = require("./getEmoji")(reaction.emoji);
-        for (let { channelID, reactions, limited } of self.config) {
+
+        for (let { messageID, channelID, reactions, limit, restrictions } of config) {
             if (channelID != reaction.message.channel.id) continue;
+            if (messageID != reaction.message.id) continue;
+            if (restrictions && !member.permissions.has(restrictions)) {
+                await reaction.users.remove(user.id).catch((err) => {
+                    throw new SuperError("CanNotRemoveReaction", err.toString());
+                });
+                continue; 
+            }
 
             let addRole = [];
 
@@ -18,13 +29,18 @@ module.exports = async (self) => {
             
             for (let { emoji, roles } of reactions) {
                 if (cleanEmoji == emoji) whitelist.push.apply(whitelist, roles);
-                blacklist.push.apply(blacklist, roles);
+                else blacklist.push.apply(blacklist, roles);
             };
 
-            if (limited) {
-                addRole = addRole.filter((role) => {
-                    return !blacklist.includes(role) && !member.roles.cache.has(role);
+            let reactionSize = reaction.message.reactions.cache.filter(reaction => {
+                return reaction.users.cache.has(user.id);
+            }).size;
+
+            if (reactionSize > limit) {
+                await reaction.users.remove(user.id).catch((err) => {
+                    throw new SuperError("CanNotRemoveReaction", err.toString());
                 });
+                continue;
             }
 
             addRole.push.apply(addRole, whitelist);
@@ -33,20 +49,19 @@ module.exports = async (self) => {
                 throw new SuperError("CanNotSetUserRoles", err.toString());
             });
 
-            if (limited) await reaction.users.remove(user.id).catch((err) => {
-                throw new SuperError("CanNotRemoveReaction", err.toString());
-            });
         };
     });
 
-    self.client.on("messageReactionRemove", async(reaction, user) => {
-        if (self.client.user.equals(user)) return;
+
+
+    client.on("messageReactionRemove", async(reaction, user) => {
+        if (client.user.equals(user)) return;
         let member = reaction.message.guild.members.cache.get(user.id);
         let cleanEmoji = require("./getEmoji")(reaction.emoji);
 
-        for (let { channelID, reactions, limited} of self.config) {
-            if (limited) continue;
+        for (let { messageID, channelID, reactions } of config) {
             if (channelID != reaction.message.channel.id) continue;
+            if (messageID != reaction.message.id) continue;
 
             let keep = [];
             let remove = [];
