@@ -1,6 +1,14 @@
 Discord ReactionRole System
 =================
 
+![totalDownloads](https://img.shields.io/npm/dt/reaction-role?style=for-the-badge)
+![weeklyDownloads](https://img.shields.io/npm/dw/reaction-role?style=for-the-badge)
+![version](https://img.shields.io/npm/v/reaction-role?style=for-the-badge)
+![nodeVersion](https://img.shields.io/node/v/reaction-role?style=for-the-badge)
+![license](https://img.shields.io/npm/l/reaction-role?style=for-the-badge)
+![GitHub stars](https://img.shields.io/github/stars/barbarbar338/reaction-role?style=for-the-badge)
+
+
 <p><b>ReactionRole</b> is a module that allows you to create Discord reaction role easily!</p>
 <p>This module is compatible with all node.js discord wrappers (like discord.js, eris, discord.js-commando etc.)</p>
 <p>You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!</p>
@@ -8,12 +16,15 @@ Discord ReactionRole System
 <b>[Discord: https://discord.com/invite/BjEJFwh](https://discord.com/invite/BjEJFwh)</b>
 -------
 
+<b>[Docs: https://reactionrole.bariscodes.me/](https://reactionrole.bariscodes.me/)</b>
+-------
+
 <b>[NPM Page](https://www.npmjs.com/package/reaction-role)</b>
 -------
 
 Usage
 ------------
-<p>Here is a simple but effective example! (if you are using discord.js)</p>
+<p>Here is a simple but effective example!</p>
 
 ```js
 // ReactionRole Packages
@@ -29,7 +40,7 @@ const system = new ReactionRole("TOKEN");
  */
 let option1 = system.createOption("✅", "697809380137107478");
 let option2 = system.createOption("rifcat:720623460321198152", "708355720436777033");
-let option3 = system.createOption("cat1:720623437466435626", "703908514887761930");
+let option3 = system.createOption("a:cat1:720623437466435626", "703908514887761930");
 
 /**
  * Creating Message

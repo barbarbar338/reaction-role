@@ -14,6 +14,9 @@
         "url": "https://github.com/barbarbar338/reaction-role"
     },
     "license": "MIT",
+    "engines": {
+        "node": "12.x"
+    },
     "keywords": [
         "discord",
         "bot",
