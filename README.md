@@ -17,7 +17,7 @@ Usage
 
 ```js
 // ReactionRole Packages
-const ReactionRole = require(".");
+const ReactionRole = require("reaction-role");
 const system = new ReactionRole("TOKEN");
 
 /**
@@ -53,16 +53,16 @@ system.reInit();
 <p>It looks so scary right :D Don't worry here is a simpler system</p>
 
 ```js
-const ReactionRole = require(".");
-const reactionRole = new ReactionRole("TOKEN");
+const ReactionRole = require("reaction-role");
+const system = new ReactionRole("TOKEN");
 
 let option1 = reactionRole.createOption("✅", "697809380137107478");
 let option2 = reactionRole.createOption("rifcat:720623460321198152", "708355720436777033");
 let option3 = reactionRole.createOption("a:cat1:720623437466435626", "703908514887761930");
 
-reactionRole.createMessage("727272497157898372", "702115562158948432", 2, null, option1, option2, option3);
+system.createMessage("727272497157898372", "702115562158948432", 2, null, option1, option2, option3);
 
-reactionRole.init();
+system.init();
 ```
 
 <p>It's actually exactly the same stuff just no comment lines :P</p>
