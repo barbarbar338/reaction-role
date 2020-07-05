@@ -1,7 +1,8 @@
 const { Client } = require("discord.js");
 
-module.exports = (self) => {
+module.exports = async (self) => {
+    console.info("[ReactionRole] ReInitializing System!");
     self.client.destroy();
     self.client = new Client();
-    require("./init")(self);
+    await require("./init")(self);
 }
