@@ -1,24 +1,23 @@
 const SuperError = require("../classes/SuperError");
 
 module.exports = async (self) => {
-    let { client, config } = self; 
-
-    client.on("messageReactionAdd", async(reaction, user) => {
-        if (client.user.equals(user)) return;
+    self.client.on("messageReactionAdd", async (reaction, user) => {
+        if (self.client.user.equals(user)) return;
         let member = reaction.message.guild.members.cache.get(user.id);
         if (!member) return;
 
         let cleanEmoji = require("./getEmoji")(reaction.emoji);
 
-        for (let { messageID, channelID, reactions, limit, restrictions } of config) {
+        for (let { messageID, channelID, reactions, limit, restrictions } of self.config) {
             if (channelID != reaction.message.channel.id) continue;
             if (messageID != reaction.message.id) continue;
-            if (restrictions && !member.permissions.has(restrictions)) {
+            if (restrictions && member.permissions.has(restrictions)) {
+                console.log(restrictions)
                 await reaction.users.remove(user.id).catch((err) => {
                     throw new SuperError("CanNotRemoveReaction", err.toString());
                 });
-                continue; 
-            }
+                continue;
+            };
 
             let addRole = [];
 
@@ -26,22 +25,30 @@ module.exports = async (self) => {
 
             let whitelist = [];
             let blacklist = [];
-            
+
             for (let { emoji, roles } of reactions) {
                 if (cleanEmoji == emoji) whitelist.push.apply(whitelist, roles);
                 else blacklist.push.apply(blacklist, roles);
             };
 
-            let reactionSize = reaction.message.reactions.cache.filter(reaction => {
-                return reaction.users.cache.has(user.id);
-            }).size;
+            let configEmojis = reactions.map(r => {
+                return r.emoji
+            });
+
+            let reactionSize = reaction.message.reactions.cache
+                .filter(r => {
+                    return configEmojis.includes(require("./getEmoji")(r.emoji));
+                })
+                .filter(r => {
+                    return r.users.cache.has(user.id);
+                }).size;
 
             if (reactionSize > limit) {
                 await reaction.users.remove(user.id).catch((err) => {
                     throw new SuperError("CanNotRemoveReaction", err.toString());
                 });
                 continue;
-            }
+            };
 
             addRole.push.apply(addRole, whitelist);
 
@@ -52,14 +59,12 @@ module.exports = async (self) => {
         };
     });
 
-
-
-    client.on("messageReactionRemove", async(reaction, user) => {
-        if (client.user.equals(user)) return;
+    self.client.on("messageReactionRemove", async (reaction, user) => {
+        if (self.client.user.equals(user)) return;
         let member = reaction.message.guild.members.cache.get(user.id);
         let cleanEmoji = require("./getEmoji")(reaction.emoji);
 
-        for (let { messageID, channelID, reactions } of config) {
+        for (let { messageID, channelID, reactions } of self.config) {
             if (channelID != reaction.message.channel.id) continue;
             if (messageID != reaction.message.id) continue;
 

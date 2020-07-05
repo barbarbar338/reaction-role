@@ -7,7 +7,7 @@ module.exports = function ReactionRole(token) {
     self.token = token;
     self.config = [];
     self.client = new Client();
-    
+
     self.createOption = (...arguments) => require("../methods/createOption")(...arguments);
     self.createMessage = (...arguments) => require("../methods/createMessage")(self, ...arguments);
     self.init = async () => await require("../methods/init")(self);
