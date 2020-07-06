@@ -1,5 +1,6 @@
 const { Client } = require("discord.js");
 const SuperError = require("./SuperError");
+const FileManager = require("./FileManager");
 
 module.exports = function ReactionRole(token) {
     self = this;
@@ -7,6 +8,7 @@ module.exports = function ReactionRole(token) {
     self.token = token;
     self.config = [];
     self.client = new Client();
+    self.fileManager = FileManager;
 
     self.createOption = (...arguments) => require("../methods/createOption")(...arguments);
     self.createMessage = (...arguments) => require("../methods/createMessage")(self, ...arguments);
