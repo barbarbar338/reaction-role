@@ -12,4 +12,5 @@ module.exports = function ReactionRole(token) {
     self.createMessage = (...arguments) => require("../methods/createMessage")(self, ...arguments);
     self.init = async () => await require("../methods/init")(self);
     self.reInit = async () => await require("../methods/reInit")(self);
+    self.importConfig = (config) => require("../methods/importConfig")(self, config);
 };
