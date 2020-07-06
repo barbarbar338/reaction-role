@@ -1,5 +1,5 @@
 const ReactionRole = require(".");
-const system = new ReactionRole("TOKEN");
+const system = new ReactionRole("NTkwNzk4MTcyNjcwOTE4NjY5.XwLlsw.mM57XPYCSMtURxLmvmouqD_Ajy8");
 
 /*let option1 = system.createOption("✅", "697809380137107478");
 let option2 = system.createOption("rifcat:720623460321198152", "708355720436777033");
@@ -9,5 +9,7 @@ system.createMessage("727272497157898372", "702115562158948432", 2, null, option
 system.importConfig(require("./config.json"));
 
 console.log(system.config)
+
+system.exportConfig("test/deneme")
 
 system.init();
