@@ -1,6 +1,5 @@
 const fs = require("fs");
 const SuperError = require("../classes/SuperError");
-const checkFile = require("./checkFile");
 
 module.exports = (self, file) => {
     try {
