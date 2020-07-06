@@ -1,5 +1,5 @@
 const ReactionRole = require(".");
-const system = new ReactionRole("NTkwNzk4MTcyNjcwOTE4NjY5.XwLiWA.k_lAbp7pB3tU98uVunWEAvNlJLA");
+const system = new ReactionRole("TOKEN");
 
 /*let option1 = system.createOption("✅", "697809380137107478");
 let option2 = system.createOption("rifcat:720623460321198152", "708355720436777033");
