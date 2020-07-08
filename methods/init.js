@@ -1,8 +1,22 @@
 const SuperError = require("../classes/SuperError");
 module.exports = async (self) => {
-    await self.client.login(self.token).catch((err) => {
-        throw new SuperError("InvalidToken", "Please specify a valid BOT token.");
-    });
+
+    if (self.mongoURL) {
+        self.database.once("open", async() => {
+            self.config.forEach(async rr => {
+                await self.database.createMessage(rr);
+            });
+            let savedConfig = await self.rrModel.find();
+            self.importConfig(savedConfig);
+            await self.client.login(self.token).catch((err) => {
+                throw new SuperError("InvalidToken", "Please specify a valid BOT token.");
+            });
+        });
+    } else {
+        await self.client.login(self.token).catch((err) => {
+            throw new SuperError("InvalidToken", "Please specify a valid BOT token.");
+        });
+    }
 
     self.client.on("ready", async () => {
         console.info("[ReactionRole] Fetching messages");
