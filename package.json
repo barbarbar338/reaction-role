@@ -1,6 +1,6 @@
 {
     "name": "reaction-role",
-    "version": "2.0.2",
+    "version": "2.1.0",
     "description": "ReactionRole is a module that allows you to create Discord reaction role easily!",
     "main": "classes/ReactionRole.js",
     "scripts": {
@@ -8,7 +8,8 @@
         "start": "node test.js"
     },
     "dependencies": {
-        "discord.js": "^12.2.0"
+        "discord.js": "^12.2.0",
+        "mongoose": "^5.9.22"
     },
     "repository": {
         "url": "https://github.com/barbarbar338/reaction-role"
@@ -26,6 +27,12 @@
         "discord-bot",
         "emoji",
         "role",
-        "emoji-role"
+        "emoji-role",
+        "save",
+        "database",
+        "mongodb",
+        "mongoose",
+        "mongo",
+        "rr"
     ]
 }
