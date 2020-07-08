@@ -13,7 +13,7 @@ module.exports = function ReactionRole(token, mongoURL = null) {
     self.fileManager = FileManager;
     
     if (self.mongoURL) {
-        self.rrModel = require("../models/rrModel");
+        self.rrModel = require("../database/rrModel");
 
         Mongoose.connect(self.mongoURL, {
             useNewUrlParser: true,
@@ -26,30 +26,8 @@ module.exports = function ReactionRole(token, mongoURL = null) {
             throw new SuperError("DataBaseError", err.toString());
         });
 
-        self.database.createMessage = async(rr) => {
-            let exists = await self.rrModel.findOne({
-                messageID: rr.messageID
-            });
-            if (exists) {
-                await self.rrModel.updateOne({ 
-                    messageID: rr.messageID
-                }, {
-                    channelID: rr.channelID,
-                    limit: rr.limit,
-                    restrictions: rr.restrictions,
-                    reactions: rr.reactions
-                });
-            } else {
-                exists = new self.rrModel(rr);
-                await exists.save();
-            }
-        }
-
-        self.database.deleteMessage = async(messageID) => {
-            await self.rrModel.deleteOne({
-                messageID
-            });
-        }
+        self.database.createMessage = async(rr) => await require("../database/createMessage")(self.rrModel, rr);
+        self.database.deleteMessage = async(messageID) => await require("../database/deleteMessage")(self.rrModel, messageID);
     }
 
     self.createOption = (...arguments) => require("../methods/createOption")(...arguments);
