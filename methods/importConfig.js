@@ -1,9 +1,9 @@
 const SuperError = require("../classes/SuperError");
 
-module.exports = (self, config) => {
+module.exports = async (self, config) => {
     self.config = self.config.concat(config);
     if (self.client.user) {
-        config.forEach(message => {
+        config.forEach(async message => {
             let msg = await self.client.channels.cache.get(message.channelID).messages.fetch(message.messageID).catch(err => {
                 throw new SuperError("CanNotFetchMesssage", err.toString());
             });

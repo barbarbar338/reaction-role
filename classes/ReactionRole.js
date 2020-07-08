@@ -26,8 +26,8 @@ module.exports = function ReactionRole(token, mongoURL = null) {
             throw new SuperError("DataBaseError", err.toString());
         });
 
-        self.database.createMessage = async(rr) => await require("../database/createMessage")(self.rrModel, rr);
-        self.database.deleteMessage = async(messageID) => await require("../database/deleteMessage")(self.rrModel, messageID);
+        self.database.createMessage = async (rr) => await require("../database/createMessage")(self.rrModel, rr);
+        self.database.deleteMessage = async (messageID) => await require("../database/deleteMessage")(self.rrModel, messageID);
     }
 
     self.createOption = (...arguments) => require("../methods/createOption")(...arguments);
@@ -35,6 +35,6 @@ module.exports = function ReactionRole(token, mongoURL = null) {
     self.deleteMessage = async (messageID, channelID) => await require("../methods/deleteMessage")(self, messageID, channelID);
     self.init = async () => await require("../methods/init")(self);
     self.reInit = async () => await require("../methods/reInit")(self);
-    self.importConfig = (config) => require("../methods/importConfig")(self, config);
+    self.importConfig = async (config) => await require("../methods/importConfig")(self, config);
     self.exportConfig = (file) => require("../methods/exportConfig")(self, file); 
 };
