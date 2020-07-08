@@ -1,0 +1,29 @@
+[
+    {
+        "messageID": "MESSAGE_ID",
+        "channelID": "CHANNEL_ID",
+        "limit": 2,
+        "restrictions": null,
+        "reactions": [
+            {
+                "emoji": "EMOJI",
+                "roles": [
+                    "ROLE_ID",
+                    "ROLE_ID"
+                ]
+            },
+            {
+                "emoji": "EMOJI",
+                "roles": [
+                    "ROLE_ID"
+                ]
+            },
+            {
+                "emoji": "EMOJI",
+                "roles": [
+                    "ROLE_ID"
+                ]
+            }
+        ]
+    }
+]
