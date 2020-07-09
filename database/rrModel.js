@@ -9,6 +9,10 @@ const rrSchema = new Mongoose.Schema({
         type: String,
         required: true
     },
+    channelID: {
+        type: String,
+        required: true
+    },
     limit: {
         type: Number,
         required: true

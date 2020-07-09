@@ -3,8 +3,9 @@ module.exports = async (self) => {
 
     if (self.mongoURL) {
         self.database.once("open", async() => {
+            console.info("[ReactionRole] Connected to database");
             self.config.forEach(async rr => {
-                await self.database.createMessage(rr);
+                await self.database.createMessage(rr, self.client.channels.cache.get(rr.channelID).guild.id);
             });
             let savedConfig = await self.rrModel.find();
             self.importConfig(savedConfig);

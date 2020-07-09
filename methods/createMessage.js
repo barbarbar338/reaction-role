@@ -31,7 +31,7 @@ module.exports = async(self, ...arguments) => {
                 };
             };
         };
-        if (self.mongoURL) self.database.createMessage(message);
+        if (self.mongoURL) self.database.createMessage(message,self.client.channels.cache.get(message.channelID).guild.id);
     }
     self.config.push(message);
 };
