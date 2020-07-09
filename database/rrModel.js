@@ -9,7 +9,7 @@ const rrSchema = new Mongoose.Schema({
         type: String,
         required: true
     },
-    channelID: {
+    guildID: {
         type: String,
         required: true
     },
