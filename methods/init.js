@@ -4,11 +4,6 @@ module.exports = async (self) => {
     if (self.mongoURL) {
         self.database.once("open", async() => {
             console.info("[ReactionRole] Connected to database");
-            self.config.forEach(async rr => {
-                await self.database.createMessage(rr, self.client.channels.cache.get(rr.channelID).guild.id);
-            });
-            let savedConfig = await self.rrModel.find();
-            self.importConfig(savedConfig);
             await self.client.login(self.token).catch((err) => {
                 throw new SuperError("InvalidToken", "Please specify a valid BOT token.");
             });
@@ -21,6 +16,13 @@ module.exports = async (self) => {
 
     self.client.on("ready", async () => {
         console.info("[ReactionRole] Fetching messages");
+
+        self.config.forEach(async rr => {
+            rr.guildID = self.client.channels.cache.get(rr.channelID).guild.id;
+            await self.database.createMessage(rr);
+        });
+        let savedConfig = await self.rrModel.find();
+        self.importConfig(savedConfig);
 
         for (let { channelID, messageID, reactions } of self.config) {
             let message = await self.client.channels.cache.get(channelID).messages.fetch(messageID).catch(err => {

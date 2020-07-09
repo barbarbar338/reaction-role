@@ -1,6 +1,6 @@
 {
     "name": "reaction-role",
-    "version": "2.1.0",
+    "version": "2.1.4",
     "description": "ReactionRole is a module that allows you to create Discord reaction role easily!",
     "main": "classes/ReactionRole.js",
     "scripts": {
