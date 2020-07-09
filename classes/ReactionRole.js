@@ -26,7 +26,7 @@ module.exports = function ReactionRole(token, mongoURL = null) {
             throw new SuperError("DataBaseError", err.toString());
         });
 
-        self.database.createMessage = async (rr, guildID) => await require("../database/createMessage")(self.rrModel, rr, guildID);
+        self.database.createMessage = async (rr) => await require("../database/createMessage")(self.rrModel, rr);
         self.database.deleteMessage = async (messageID) => await require("../database/deleteMessage")(self.rrModel, messageID);
     }
 

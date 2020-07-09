@@ -8,14 +8,15 @@ module.exports = async(self, ...arguments) => {
         "channelID": arguments[1],
         "limit": arguments[2],
         "restrictions": arguments[3],
-        "reactions": reactions
+        "reactions": reactions,
+        "guildID": null
     }
     if (self.client.user) {
         let msg = await self.client.channels.cache.get(message.channelID).messages.fetch(message.messageID).catch(err => {
             throw new SuperError("CanNotFetchMesssage", err.toString());
         });
         if (!msg) throw new SuperError("CanNotFetchMesssage", err.toString());
-
+        message.guildID = msg.guild.id;
         for (let { emoji } of reactions) {
             emoji = require("./cleanEmoji")(emoji);
             let messageReaction = msg.reactions.cache.get(emoji);
@@ -31,7 +32,7 @@ module.exports = async(self, ...arguments) => {
                 };
             };
         };
-        if (self.mongoURL) self.database.createMessage(message,self.client.channels.cache.get(message.channelID).guild.id);
+        if (self.mongoURL) self.database.createMessage(message);
     }
     self.config.push(message);
 };

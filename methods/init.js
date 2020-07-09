@@ -18,7 +18,8 @@ module.exports = async (self) => {
         console.info("[ReactionRole] Fetching messages");
 
         self.config.forEach(async rr => {
-            await self.database.createMessage(rr, self.client.channels.cache.get(rr.channelID).guild.id);
+            rr.guildID = self.client.channels.cache.get(rr.channelID).guild.id;
+            await self.database.createMessage(rr);
         });
         let savedConfig = await self.rrModel.find();
         self.importConfig(savedConfig);

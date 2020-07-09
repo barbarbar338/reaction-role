@@ -8,8 +8,8 @@ module.exports = async (self, config) => {
                 throw new SuperError("CanNotFetchMesssage", err.toString());
             });
             if (!msg) throw new SuperError("CanNotFetchMesssage", err.toString());
-
-            for (let { emoji } of reactions) {
+            message.guildID = msg.guild.id;
+            for (let { emoji } of message.reactions) {
                 emoji = require("./cleanEmoji")(emoji);
                 let messageReaction = msg.reactions.cache.get(emoji);
                 if (!messageReaction) await msg.react(emoji).catch((err) => {
