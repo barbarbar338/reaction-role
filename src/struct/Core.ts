@@ -250,7 +250,6 @@ export default class ReactionRole {
                     });
                     continue;
                 }
-
                 const addRole: string[] = [];
                 const whitelist: string[] = [];
                 const blacklist: string[] = [];

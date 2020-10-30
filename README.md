@@ -3,7 +3,6 @@ Discord ReactionRole System
 ![totalDownloads](https://img.shields.io/npm/dt/reaction-role?style=for-the-badge)
 ![weeklyDownloads](https://img.shields.io/npm/dw/reaction-role?style=for-the-badge)
 ![version](https://img.shields.io/npm/v/reaction-role?style=for-the-badge)
-![nodeVersion](https://img.shields.io/node/v/reaction-role?style=for-the-badge)
 ![license](https://img.shields.io/npm/l/reaction-role?style=for-the-badge)
 ![GitHub stars](https://img.shields.io/github/stars/barbarbar338/reaction-role?style=for-the-badge)
 
@@ -12,6 +11,11 @@ Discord ReactionRole System
 This module is compatible with all node.js discord wrappers (like discord.js, eris, discord.js-commando etc.)
 
 You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!
+
+# IMPORTANT NOTE
+---
+You have to turn on "Server Members Intent" option to use this package properly.
+![ReactionRoleWarningImage](https://raw.githubusercontent.com/barbarbar338/lib/master/personal_page/images/reaction-role-warning.png)
 
 Useful Links
 ------

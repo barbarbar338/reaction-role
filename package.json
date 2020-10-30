@@ -15,7 +15,7 @@
 	},
 	"main": "dist",
 	"name": "reaction-role",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"description": "ReactionRole is a module that allows you to create Discord reaction role easily!",
 	"scripts": {
 		"build": "tsc",
