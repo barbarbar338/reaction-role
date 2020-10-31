@@ -1,3 +1,8 @@
+/*
+I just integrated the system.
+However, there is a problem that it will change the syntax too much. Because for each option, you need to set the message to be sent when a reaction is added and the message to be sent when the reaction is removed.
+*/
+
 import { Client, PermissionString, TextChannel } from "discord.js";
 import { connect } from "mongoose";
 import { IConfig, IOptionData, IMessageData } from "reaction-role";
@@ -26,11 +31,15 @@ export default class ReactionRole {
     }
     public createOption(
         emoji: string,
+        addMessage: string,
+        removeMessage: string,
         add: string[],
         remove: string[],
     ): IOptionData {
         return {
             emoji,
+            addMessage,
+            removeMessage,
             add,
             remove,
         };
@@ -235,7 +244,6 @@ export default class ReactionRole {
             console.info("[ReactionRole] Fetched messages, system is ready!");
         });
         this._client.on("messageReactionAdd", async (reaction, user) => {
-            console.log("add");
             if (!this._client.user) return;
             if (user.partial) user = await user.fetch();
             if (this._client.user.equals(user)) return;
@@ -259,9 +267,11 @@ export default class ReactionRole {
                 const addRole: string[] = [];
                 const whitelist: string[] = [];
                 let blacklist: string[] = [];
+                let addMessage: string;
                 member.roles.cache.forEach((role) => addRole.push(role.id));
                 for (const option of messageData.reactions) {
                     if (option.emoji == cleanEmoji) {
+                        addMessage = option.addMessage;
                         whitelist.push(...option.add);
                         blacklist.push(...option.remove);
                     } else blacklist.push(...option.add);
@@ -284,13 +294,21 @@ export default class ReactionRole {
                 blacklist = blacklist.filter((id) =>
                     member.roles.cache.has(id),
                 );
-                console.log(addRole, blacklist);
-                await member.roles.add(addRole).catch((e) => {
-                    throw new SuperError("CanNotAddUserRoles", e);
-                });
-                await member.roles.remove(blacklist).catch((e) => {
-                    throw new SuperError("CanNotRemoveUserRoles", e);
-                });
+                if (addRole.length > 0)
+                    await member.roles
+                        .add(addRole)
+                        .then(async () => {
+                            await member
+                                .send(addMessage)
+                                .catch(() => undefined);
+                        })
+                        .catch((e) => {
+                            throw new SuperError("CanNotAddUserRoles", e);
+                        });
+                if (blacklist.length > 0)
+                    await member.roles.remove(blacklist).catch((e) => {
+                        throw new SuperError("CanNotRemoveUserRoles", e);
+                    });
             }
         });
         this._client.on("messageReactionRemove", async (reaction, user) => {
@@ -307,17 +325,28 @@ export default class ReactionRole {
                 if (reaction.message.id != messageData.messageID) continue;
                 const keep: string[] = [];
                 const remove: string[] = [];
+                let removeMessage: string;
                 for (const option of messageData.reactions) {
-                    if (option.emoji == cleanEmoji) remove.push(...option.add);
-                    else keep.push(...option.add);
+                    if (option.emoji == cleanEmoji) {
+                        removeMessage = option.removeMessage;
+                        remove.push(...option.add);
+                    } else keep.push(...option.add);
                 }
                 remove.filter(
                     (role) =>
                         !keep.includes(role) && member.roles.cache.has(role),
                 );
-                await member.roles.remove(remove).catch((e) => {
-                    throw new SuperError("CanNotRemoveRole", e);
-                });
+                if (remove.length > 0)
+                    await member.roles
+                        .remove(remove)
+                        .then(async () => {
+                            await member
+                                .send(removeMessage)
+                                .catch(() => undefined);
+                        })
+                        .catch((e) => {
+                            throw new SuperError("CanNotRemoveRole", e);
+                        });
             }
         });
         return this._client.login(this._token).catch(() => {

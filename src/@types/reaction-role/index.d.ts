@@ -7,7 +7,11 @@ declare module "reaction-role" {
         add: string[];
         remove: string[];
     }
-    export interface IOptionData extends IRoleData {
+    export interface IOptionMessageData {
+        addMessage: string;
+        removeMessage: string;
+    }
+    export interface IOptionData extends IRoleData, IOptionMessageData {
         emoji: string;
     }
     export interface IMessageData {
