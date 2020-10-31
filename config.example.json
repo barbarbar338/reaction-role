@@ -3,24 +3,35 @@
         "messageID": "MESSAGE_ID",
         "channelID": "CHANNEL_ID",
         "limit": 2,
-        "restrictions": null,
+        "restrictions": [],
         "reactions": [
             {
                 "emoji": "EMOJI",
-                "roles": [
+                "addMessage": "ADD_MESSAGE",
+                "removeMessage": "REMOVE_MESSAGE",
+                "add": [
                     "ROLE_ID",
                     "ROLE_ID"
-                ]
-            },
-            {
-                "emoji": "EMOJI",
-                "roles": [
+                ],
+                "remove": [
                     "ROLE_ID"
                 ]
             },
             {
                 "emoji": "EMOJI",
-                "roles": [
+                "addMessage": "ADD_MESSAGE",
+                "removeMessage": "REMOVE_MESSAGE",
+                "add": [
+                    "ROLE_ID"
+                ],
+                "remove": []
+            },
+            {
+                "emoji": "EMOJI",
+                "addMessage": "ADD_MESSAGE",
+                "removeMessage": "REMOVE_MESSAGE",
+                "add": [],
+                "remove": [
                     "ROLE_ID"
                 ]
             }
