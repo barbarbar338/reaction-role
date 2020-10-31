@@ -3,9 +3,12 @@ declare module "reaction-role" {
         token: string;
         mongodb_uri?: string;
     }
-    export interface IOptionData {
+    export interface IRoleData {
+        add: string[];
+        remove: string[];
+    }
+    export interface IOptionData extends IRoleData {
         emoji: string;
-        roles: string[];
     }
     export interface IMessageData {
         messageID: string;

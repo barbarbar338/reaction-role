@@ -24,10 +24,15 @@ export default class ReactionRole {
         if (cleaned) return cleaned[0];
         return emoji;
     }
-    public createOption(emoji: string, ...roles: string[]): IOptionData {
+    public createOption(
+        emoji: string,
+        add: string[],
+        remove: string[],
+    ): IOptionData {
         return {
             emoji,
-            roles,
+            add,
+            remove,
         };
     }
     public async createMessage(
@@ -230,6 +235,7 @@ export default class ReactionRole {
             console.info("[ReactionRole] Fetched messages, system is ready!");
         });
         this._client.on("messageReactionAdd", async (reaction, user) => {
+            console.log("add");
             if (!this._client.user) return;
             if (user.partial) user = await user.fetch();
             if (this._client.user.equals(user)) return;
@@ -252,12 +258,13 @@ export default class ReactionRole {
                 }
                 const addRole: string[] = [];
                 const whitelist: string[] = [];
-                const blacklist: string[] = [];
+                let blacklist: string[] = [];
                 member.roles.cache.forEach((role) => addRole.push(role.id));
                 for (const option of messageData.reactions) {
-                    if (option.emoji == cleanEmoji)
-                        whitelist.push(...option.roles);
-                    else blacklist.push(...option.roles);
+                    if (option.emoji == cleanEmoji) {
+                        whitelist.push(...option.add);
+                        blacklist.push(...option.remove);
+                    } else blacklist.push(...option.add);
                 }
                 const configEmojis = messageData.reactions.map((r) => r.emoji);
                 const reactionSize = reaction.message.reactions.cache
@@ -267,7 +274,6 @@ export default class ReactionRole {
                         ),
                     )
                     .filter((r) => r.users.cache.has(user.id)).size;
-
                 if (reactionSize > messageData.limit) {
                     await reaction.users.remove(user.id).catch((e) => {
                         throw new SuperError("CanNotRemoveReaction", e);
@@ -275,8 +281,15 @@ export default class ReactionRole {
                     continue;
                 }
                 addRole.push(...whitelist);
+                blacklist = blacklist.filter((id) =>
+                    member.roles.cache.has(id),
+                );
+                console.log(addRole, blacklist);
                 await member.roles.add(addRole).catch((e) => {
                     throw new SuperError("CanNotAddUserRoles", e);
+                });
+                await member.roles.remove(blacklist).catch((e) => {
+                    throw new SuperError("CanNotRemoveUserRoles", e);
                 });
             }
         });
@@ -295,9 +308,8 @@ export default class ReactionRole {
                 const keep: string[] = [];
                 const remove: string[] = [];
                 for (const option of messageData.reactions) {
-                    if (option.emoji == cleanEmoji)
-                        remove.push(...option.roles);
-                    else keep.push(...option.roles);
+                    if (option.emoji == cleanEmoji) remove.push(...option.add);
+                    else keep.push(...option.add);
                 }
                 remove.filter(
                     (role) =>
