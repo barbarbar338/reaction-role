@@ -1,8 +1,3 @@
-/*
-I just integrated the system.
-However, there is a problem that it will change the syntax too much. Because for each option, you need to set the message to be sent when a reaction is added and the message to be sent when the reaction is removed.
-*/
-
 import { Client, PermissionString, TextChannel } from "discord.js";
 import { connect } from "mongoose";
 import { IConfig, IOptionData, IMessageData } from "reaction-role";
