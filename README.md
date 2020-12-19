@@ -1,4 +1,4 @@
-# Discord ReactionRole System
+# Discord ReactionRole client
 
 ![totalDownloads](https://img.shields.io/npm/dt/reaction-role?style=for-the-badge)
 ![weeklyDownloads](https://img.shields.io/npm/dw/reaction-role?style=for-the-badge)
@@ -24,24 +24,29 @@ You have to turn on "Server Members Intent" option to use this package properly.
 See [documentation](https://reactionrole.bariscodes.me/) for detailed information!
 
 ```js
-const ReactionRole = require("reaction-role");
-const system = new ReactionRole("DISCORD_BOT_TOKEN");
+const { ReactionRole } = require("reaction-role");
+/*
+ * you can use this client as your normal bot client
+ * this instance extends from default discord.js client
+ * See https://discord.js.org/#/docs/main/stable/class/Client
+ * */
+const client = new ReactionRole("DISCORD_BOT_TOKEN");
 
-const option1 = system.createOption(
+const option1 = client.createOption(
 	"EMOJI",
 	"ADD_MESSAGE",
 	"REMOVE_MESSAGE",
 	["ROLE_TO_ADD_ID"],
 	["ROLE_TO_REMOVE_ID"],
 );
-const option2 = system.createOption(
+const option2 = client.createOption(
 	"EMOJI",
 	"ADD_MESSAGE",
 	"REMOVE_MESSAGE",
 	["ROLE_TO_ADD_ID"],
 	["ROLE_TO_REMOVE_ID"],
 );
-const option3 = system.createOption(
+const option3 = client.createOption(
 	"EMOJI",
 	"ADD_MESSAGE",
 	"REMOVE_MESSAGE",
@@ -52,7 +57,7 @@ const option3 = system.createOption(
 const LIMIT = 3;
 const RESTRICTIONS = [];
 
-system.createMessage(
+client.createMessage(
 	"MESSAGE_ID",
 	"CHANNEL_ID",
 	LIMIT,
@@ -62,7 +67,7 @@ system.createMessage(
 	option3,
 );
 
-system.init();
+client.init();
 ```
 
 ## Useful Links
