@@ -1,40 +1,31 @@
-[
-    {
-        "messageID": "MESSAGE_ID",
-        "channelID": "CHANNEL_ID",
-        "limit": 2,
-        "restrictions": [],
-        "reactions": [
-            {
-                "emoji": "EMOJI",
-                "addMessage": "ADD_MESSAGE",
-                "removeMessage": "REMOVE_MESSAGE",
-                "add": [
-                    "ROLE_ID",
-                    "ROLE_ID"
-                ],
-                "remove": [
-                    "ROLE_ID"
-                ]
-            },
-            {
-                "emoji": "EMOJI",
-                "addMessage": "ADD_MESSAGE",
-                "removeMessage": "REMOVE_MESSAGE",
-                "add": [
-                    "ROLE_ID"
-                ],
-                "remove": []
-            },
-            {
-                "emoji": "EMOJI",
-                "addMessage": "ADD_MESSAGE",
-                "removeMessage": "REMOVE_MESSAGE",
-                "add": [],
-                "remove": [
-                    "ROLE_ID"
-                ]
-            }
-        ]
-    }
-]
+{
+	"MESSAGE_ID": {
+		"messageID": "MESSAGE_ID",
+		"channelID": "CHANNEL_ID",
+		"limit": 2,
+		"restrictions": [],
+		"reactions": [
+			{
+				"emoji": "EMOJI",
+				"addMessage": "ADD_MESSAGE",
+				"removeMessage": "REMOVE_MESSAGE",
+				"add": ["ROLE_ID", "ROLE_ID"],
+				"remove": ["ROLE_ID"]
+			},
+			{
+				"emoji": "EMOJI",
+				"addMessage": "ADD_MESSAGE",
+				"removeMessage": "REMOVE_MESSAGE",
+				"add": ["ROLE_ID"],
+				"remove": []
+			},
+			{
+				"emoji": "EMOJI",
+				"addMessage": "ADD_MESSAGE",
+				"removeMessage": "REMOVE_MESSAGE",
+				"add": [],
+				"remove": ["ROLE_ID"]
+			}
+		]
+	}
+}

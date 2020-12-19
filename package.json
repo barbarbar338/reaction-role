@@ -1,15 +1,16 @@
 {
 	"dependencies": {
-		"discord.js": "^12.4.1",
-		"mongoose": "^5.10.11"
+		"bookman": "^3.0.2",
+		"discord.js": "^12.4.1"
 	},
 	"devDependencies": {
-		"@types/mongoose": "^5.7.36",
 		"@types/node": "^14.0.27",
 		"@typescript-eslint/eslint-plugin": "^3.9.0",
 		"@typescript-eslint/parser": "^3.9.0",
 		"eslint": "^7.7.0",
+		"onchange": "^7.1.0",
 		"prettier": "^2.0.5",
+		"rimraf": "^3.0.2",
 		"ts-node": "^8.10.2",
 		"typescript": "^3.9.7"
 	},
@@ -18,10 +19,11 @@
 	"version": "3.0.1",
 	"description": "ReactionRole is a module that allows you to create Discord reaction role easily!",
 	"scripts": {
+		"prebuild": "rimraf dist",
 		"build": "tsc",
-		"lint": "eslint . --ext .ts",
-		"format": "prettier --write ./src/**/*.ts",
-		"start": "ts-node src"
+		"format": "prettier --write .",
+		"format:watch": "onchange . -- prettier --write {{changed}}",
+		"start": "npm run build && node test"
 	},
 	"keywords": [
 		"discord",
@@ -33,16 +35,17 @@
 		"emoji",
 		"role",
 		"emoji-role",
-		"save",
-		"database",
-		"mongodb",
-		"mongoose",
-		"mongo",
 		"rr"
 	],
-	"author": "Barış Demirci",
+	"author": {
+		"email": "demirci.baris38@gmail.com",
+		"name": "Barış DEMİRCİ",
+		"url": "https://bariscodes.me/"
+	},
 	"license": "MIT",
 	"repository": {
-		"url": "https://github.com/barbarbar338/reaction-role"
-	}
+		"url": "https://github.com/barbarbar338/reaction-role",
+		"type": "git"
+	},
+	"typings": "dist"
 }
