@@ -12,6 +12,8 @@ This module is compatible with all node.js discord wrappers (like discord.js, er
 
 You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!
 
+Database support and TypeScript definitions are built-in
+
 # IMPORTANT NOTE
 
 ---
@@ -37,21 +39,18 @@ const option1 = client.createOption(
 	"ADD_MESSAGE",
 	"REMOVE_MESSAGE",
 	["ROLE_TO_ADD_ID"],
-	["ROLE_TO_REMOVE_ID"],
 );
 const option2 = client.createOption(
 	"EMOJI",
 	"ADD_MESSAGE",
 	"REMOVE_MESSAGE",
 	["ROLE_TO_ADD_ID"],
-	["ROLE_TO_REMOVE_ID"],
 );
 const option3 = client.createOption(
 	"EMOJI",
 	"ADD_MESSAGE",
 	"REMOVE_MESSAGE",
 	["ROLE_TO_ADD_ID"],
-	["ROLE_TO_REMOVE_ID"],
 );
 
 const LIMIT = 3;

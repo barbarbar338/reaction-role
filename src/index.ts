@@ -4,27 +4,20 @@ import {
 	PermissionString,
 	TextChannel,
 } from "discord.js";
-import { Database } from "bookman";
+import db from "quick.db";
 
-export interface IRoleData {
-	add: string[];
-	remove: string[];
-}
-
-export interface IOptionMessageData {
+export interface IOptionData {
+	emoji: string;
 	addMessage: string;
 	removeMessage: string;
-}
-
-export interface IOptionData extends IRoleData, IOptionMessageData {
-	emoji: string;
+	roles: string[];
 }
 
 export interface IMessageData {
 	messageID: string;
 	channelID: string;
 	limit: number;
-	restrictions?: import("discord.js").PermissionString[];
+	restrictions?: PermissionString[];
 	reactions: IOptionData[];
 }
 
@@ -34,19 +27,11 @@ export interface IConfig {
 
 export class ReactionRole extends Client {
 	private _token: string;
-	private database = new Database("ReactionRole");
+	private database = new db.table("reaction-role");
 	private ready = false;
 
 	constructor(token: string) {
-		super({
-			partials: [
-				"REACTION",
-				"CHANNEL",
-				"USER",
-				"MESSAGE",
-				"GUILD_MEMBER",
-			], // IDK Which one is required lol :D
-		});
+		super();
 		this._token = token;
 	}
 
@@ -54,15 +39,13 @@ export class ReactionRole extends Client {
 		emoji: string,
 		addMessage: string,
 		removeMessage: string,
-		add: string[],
-		remove: string[],
+		roles: string[]
 	): IOptionData {
 		return {
 			emoji,
 			addMessage,
 			removeMessage,
-			add,
-			remove,
+			roles
 		};
 	}
 
@@ -86,7 +69,7 @@ export class ReactionRole extends Client {
 
 	public deleteMessage(messageID: string): IConfig {
 		this.database.delete(messageID);
-		return this.database.getAll() as IConfig;
+		return this.exportConfig();
 	}
 
 	public importConfig(config: IConfig): IConfig {
@@ -94,18 +77,23 @@ export class ReactionRole extends Client {
 			const messageData = config[data];
 			this.database.set(messageData.messageID, messageData);
 		}
-		return this.database.getAll() as IConfig;
+		return this.exportConfig();
 	}
 
 	public exportConfig(): IConfig {
-		return this.database.getAll() as IConfig;
+		const dataArray = this.database.fetchAll();
+		const data: IConfig = {};
+		for (const item of dataArray) {
+			data[item.ID] = item.data;
+		}
+		return data;
 	}
 
 	public async init(): Promise<string> {
 		console.info("[ReactionRole] Spawned.");
 		this
 			.on("ready", async () => {
-				let messages = this.database.fetchAll() as IConfig;
+				let messages = this.exportConfig();
 				console.info(`[ReactionRole] Fetching ${Object.keys(messages).length} messages.`);
 				for (const messageID in messages) {
 					const messageData = messages[messageID];
@@ -126,32 +114,23 @@ export class ReactionRole extends Client {
 					for (let i = 0; i < messageData.reactions.length; i++) {
 						const option = messageData.reactions[i];
 						const newAddRoles: string[] = [];
-						const newRemoveRoles: string[] = [];
-						for (const role of option.add) {
+						for (const role of option.roles) {
 							if (guild.roles.cache.has(role)) newAddRoles.push(role);
 						}
-						for (const role of option.remove) {
-							if (guild.roles.cache.has(role)) newRemoveRoles.push(role);
-						}
 						let updated = false;
-						if (option.add.length != newAddRoles.length) {
-							option.add = newAddRoles;
-							updated = true;
-						}
-						if (option.remove.length != newRemoveRoles.length) {
-							option.remove = newRemoveRoles;
+						if (option.roles.length != newAddRoles.length) {
+							option.roles = newAddRoles;
 							updated = true;
 						}
 						if (updated) {
-							messageData.reactions[i].add = newAddRoles;
-							messageData.reactions[i].remove = newRemoveRoles;
+							messageData.reactions[i].roles = newAddRoles;
 							this.database.set(`${messageID}.reactions`, messageData.reactions);
 						}
 						if (!message.reactions.cache.has(option.emoji)) await message.react(option.emoji);
 					}
 
 				}
-				messages = this.database.getAll() as IConfig;
+				messages = this.exportConfig();
 				console.info(`[ReactionRole] Fetched ${Object.keys(messages).length} messages.`);
 				console.info(`[ReactionRole] Ready and logged in as ${this.user?.tag} (${this.user?.id})`);
 				this.ready = true;
@@ -170,11 +149,7 @@ export class ReactionRole extends Client {
 				const guild = this.guilds.cache.get(packet.d.guild_id);
 				if (!guild) return;
 				for (const option of messageData.reactions) {
-					for (const id of option.add) {
-						const role = guild.roles.cache.get(id);
-						if (!role) return;
-					}
-					for (const id of option.remove) {
+					for (const id of option.roles) {
 						const role = guild.roles.cache.get(id);
 						if (!role) return;
 					}
@@ -213,12 +188,11 @@ export class ReactionRole extends Client {
 						if (users.has(member.id)) userReactions++;
 					}
 					if (userReactions > messageData.limit) return;
-					await member.roles.add(option.add);
-					await member.roles.remove(option.remove);
+					await member.roles.add(option.roles);
 					if (option.addMessage)
 						await member.send(option.addMessage).catch(() => undefined);
 				} else {
-					await member.roles.remove(option.add);
+					await member.roles.remove(option.roles);
 					if (option.removeMessage)
 						await member
 							.send(option.removeMessage)
