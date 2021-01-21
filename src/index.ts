@@ -34,15 +34,17 @@ export class ReactionRole extends Client {
 		super();
 		this._token = token;
 		let adapter;
-		if (mongodb_uri) adapter = new adapters.MongoDB({
-			databaseName: "RR",
-			defaultDir: "ReactionRole",
-			mongodbURL: mongodb_uri
-		});
-		else adapter = new adapters.FS({
-			databaseName: "RR",
-			defaultDir: "ReactionRole"
-		});
+		if (mongodb_uri)
+			adapter = new adapters.MongoDB({
+				databaseName: "RR",
+				defaultDir: "ReactionRole",
+				mongodbURL: mongodb_uri,
+			});
+		else
+			adapter = new adapters.FS({
+				databaseName: "RR",
+				defaultDir: "ReactionRole",
+			});
 		this.database = new Database(adapter);
 	}
 
@@ -92,7 +94,7 @@ export class ReactionRole extends Client {
 	}
 
 	public async exportConfig(): Promise<IConfig> {
-		const data = (await this.database.fetchAll()) as unknown as IConfig;
+		const data = ((await this.database.fetchAll()) as unknown) as IConfig;
 		return data;
 	}
 
@@ -164,9 +166,9 @@ export class ReactionRole extends Client {
 					packet.t != "MESSAGE_REACTION_REMOVE")
 			)
 				return;
-			const messageData = await this.database.get(
+			const messageData = (await this.database.get(
 				packet.d.message_id,
-			) as IMessageData;
+			)) as IMessageData;
 			if (!messageData) return;
 			const guild = this.guilds.cache.get(packet.d.guild_id);
 			if (!guild) return;
