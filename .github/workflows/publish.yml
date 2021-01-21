@@ -14,7 +14,6 @@ jobs:
                   node-version: 14
             - run: npm install
             - run: npm run build
-            - run: npm config set registry https://registry.npmjs.org/
             - run: npm publish
               env:
                   NODE_AUTH_TOKEN: ${{secrets.NPM_SECRET_TOKEN}}
