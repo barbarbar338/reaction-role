@@ -4,7 +4,7 @@ import {
 	PermissionString,
 	TextChannel,
 } from "discord.js";
-import db from "quick.db";
+import { Database, adapters } from "bookman";
 
 export interface IOptionData {
 	emoji: string;
@@ -27,12 +27,23 @@ export interface IConfig {
 
 export class ReactionRole extends Client {
 	private _token: string;
-	private database = new db.table("reaction-role");
+	private database: Database;
 	private ready = false;
 
-	constructor(token: string) {
+	constructor(token: string, mongodb_uri?: string) {
 		super();
 		this._token = token;
+		let adapter;
+		if (mongodb_uri) adapter = new adapters.MongoDB({
+			databaseName: "RR",
+			defaultDir: "ReactionRole",
+			mongodbURL: mongodb_uri
+		});
+		else adapter = new adapters.FS({
+			databaseName: "RR",
+			defaultDir: "ReactionRole"
+		});
+		this.database = new Database(adapter);
 	}
 
 	public createOption(
@@ -49,13 +60,13 @@ export class ReactionRole extends Client {
 		};
 	}
 
-	public createMessage(
+	public async createMessage(
 		messageID: string,
 		channelID: string,
 		limit: number,
 		restrictions: PermissionString[],
 		...reactions: IOptionData[]
-	): IMessageData {
+	): Promise<IMessageData> {
 		const data: IMessageData = {
 			messageID,
 			channelID,
@@ -63,36 +74,32 @@ export class ReactionRole extends Client {
 			restrictions,
 			reactions,
 		};
-		this.database.set(messageID, data);
+		await this.database.set(messageID, data);
 		return data;
 	}
 
-	public deleteMessage(messageID: string): IConfig {
-		this.database.delete(messageID);
+	public async deleteMessage(messageID: string): Promise<IConfig> {
+		await this.database.delete(messageID);
 		return this.exportConfig();
 	}
 
-	public importConfig(config: IConfig): IConfig {
+	public async importConfig(config: IConfig): Promise<IConfig> {
 		for (const data in config) {
 			const messageData = config[data];
-			this.database.set(messageData.messageID, messageData);
+			await this.database.set(messageData.messageID, messageData);
 		}
 		return this.exportConfig();
 	}
 
-	public exportConfig(): IConfig {
-		const dataArray = this.database.fetchAll();
-		const data: IConfig = {};
-		for (const item of dataArray) {
-			data[item.ID] = item.data;
-		}
+	public async exportConfig(): Promise<IConfig> {
+		const data = (await this.database.fetchAll()) as unknown as IConfig;
 		return data;
 	}
 
 	public async init(): Promise<string> {
 		console.info("[ReactionRole] Spawned.");
 		this.on("ready", async () => {
-			let messages = this.exportConfig();
+			let messages = await this.exportConfig();
 			console.info(
 				`[ReactionRole] Fetching ${
 					Object.keys(messages).length
@@ -140,7 +147,7 @@ export class ReactionRole extends Client {
 						await message.react(option.emoji);
 				}
 			}
-			messages = this.exportConfig();
+			messages = await this.exportConfig();
 			console.info(
 				`[ReactionRole] Fetched ${
 					Object.keys(messages).length
@@ -157,7 +164,7 @@ export class ReactionRole extends Client {
 					packet.t != "MESSAGE_REACTION_REMOVE")
 			)
 				return;
-			const messageData = this.database.get(
+			const messageData = await this.database.get(
 				packet.d.message_id,
 			) as IMessageData;
 			if (!messageData) return;
