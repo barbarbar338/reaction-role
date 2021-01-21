@@ -34,24 +34,15 @@ const { ReactionRole } = require("reaction-role");
  * */
 const client = new ReactionRole("DISCORD_BOT_TOKEN");
 
-const option1 = client.createOption(
-	"EMOJI",
-	"ADD_MESSAGE",
-	"REMOVE_MESSAGE",
-	["ROLE_TO_ADD_ID"],
-);
-const option2 = client.createOption(
-	"EMOJI",
-	"ADD_MESSAGE",
-	"REMOVE_MESSAGE",
-	["ROLE_TO_ADD_ID"],
-);
-const option3 = client.createOption(
-	"EMOJI",
-	"ADD_MESSAGE",
-	"REMOVE_MESSAGE",
-	["ROLE_TO_ADD_ID"],
-);
+const option1 = client.createOption("EMOJI", "ADD_MESSAGE", "REMOVE_MESSAGE", [
+	"ROLE_TO_ADD_ID",
+]);
+const option2 = client.createOption("EMOJI", "ADD_MESSAGE", "REMOVE_MESSAGE", [
+	"ROLE_TO_ADD_ID",
+]);
+const option3 = client.createOption("EMOJI", "ADD_MESSAGE", "REMOVE_MESSAGE", [
+	"ROLE_TO_ADD_ID",
+]);
 
 const LIMIT = 3;
 const RESTRICTIONS = [];
