@@ -14,7 +14,7 @@ jobs:
                   node-version: 14
             - run: npm install
             - run: npm run build
-            - run: npm config set registry https://npm.pkg.github.com/
+            - run: npm config set registry https://npm.pkg.github.com/barbarbar338
             - run: npm publish
               env:
                 NODE_AUTH_TOKEN: ${{secrets.GIT_SECRET_TOKEN}}
