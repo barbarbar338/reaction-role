@@ -5,27 +5,7 @@ on:
         types: [created]
 
 jobs:
-    install:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: 14
-            - run: npm install
-
-    build:
-        needs: install
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: 14
-            - run: npm run build
-
     publish-github:
-        needs: build
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
@@ -33,12 +13,13 @@ jobs:
               with:
                   node-version: 14
                   registry-url: https://npm.pkg.github.com/
+            - run: npm install
+            - run: npm run build
             - run: npm publish
-              env:
+                env:
                   NODE_AUTH_TOKEN: ${{secrets.GIT_SECRET_TOKEN}}
-
-    publish-npm:
-        needs: build
+    
+    publish-github:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
@@ -46,6 +27,8 @@ jobs:
               with:
                   node-version: 14
                   registry-url: https://registry.npmjs.org/
+            - run: npm install
+            - run: npm run build
             - run: npm publish
-              env:
+                env:
                   NODE_AUTH_TOKEN: ${{secrets.NPM_SECRET_TOKEN}}
