@@ -21,52 +21,102 @@ Database support and TypeScript definitions are built-in
 You have to turn on "Server Members Intent" option to use this package properly.
 ![ReactionRoleWarningImage](https://raw.githubusercontent.com/barbarbar338/lib/master/personal_page/images/reaction-role-warning.png)
 
-## [Usage](https://reactionrole.bariscodes.me/)
+# Usage
 
-See [documentation](https://reactionrole.bariscodes.me/) for detailed information!
+Simple example:
 
 ```js
 const { ReactionRole } = require("reaction-role");
-/*
- * you can use this client as your normal bot client
- * this instance extends from default discord.js client
- * See https://discord.js.org/#/docs/main/stable/class/Client
- * */
-const client = new ReactionRole("DISCORD_BOT_TOKEN");
+const system = new ReactionRole("YOUR_BOT_TOKEN");
 
-const option1 = client.createOption("EMOJI", "ADD_MESSAGE", "REMOVE_MESSAGE", [
-	"ROLE_TO_ADD_ID",
-]);
-const option2 = client.createOption("EMOJI", "ADD_MESSAGE", "REMOVE_MESSAGE", [
-	"ROLE_TO_ADD_ID",
-]);
-const option3 = client.createOption("EMOJI", "ADD_MESSAGE", "REMOVE_MESSAGE", [
-	"ROLE_TO_ADD_ID",
-]);
+// use a mongodb uri if you want persistent messages
+const system = new ReactionRole("YOUR_BOT_TOKEN", "MONGODB_URI");
 
-const LIMIT = 3;
-const RESTRICTIONS = [];
+// create simple option
+const option1 = system.createOption("emoji", ["role_id", "role_id"]);
 
-client.createMessage(
-	"MESSAGE_ID",
-	"CHANNEL_ID",
-	LIMIT,
-	RESTRICTIONS,
+// create option with messages
+const option2 = system.createOption(
+	"emoji",
+	["role_id"],
+	"You got a role", // add message
+	"removed role", // remove message
+);
+
+// create message
+system.createMessage(
+	"channel_id",
+	"message_id",
+	1, // reaction limit
 	option1,
 	option2,
-	option3,
+);
+
+system.init();
+```
+
+Creating new messages:
+
+```js
+const { ReactionRole } = require("reaction-role");
+const client = new ReactionRole("YOUR_BOT_TOKEN");
+
+// use a mongodb uri if you want persistent messages
+const client = new ReactionRole("YOUR_BOT_TOKEN", "MONGODB_URI");
+
+// create simple option
+const option1 = client.createOption("emoji", ["role_id", "role_id"]);
+
+// create option with messages
+const option2 = client.createOption(
+	"emoji",
+	["role_id"],
+	"You got a role", // add message
+	"removed role", // remove message
+);
+
+// create message
+client.createMessage(
+	"channel_id",
+	"message_id",
+	1, // reaction limit
+	option1,
+	option2,
 );
 
 client.init();
+
+client.on("message", (message) => {
+	if (message.content == "!create") {
+		// create simple option
+		const new_option = client.createOption("emoji", ["role_id", "role_id"]);
+
+		// create option with messages
+		const new_option_2 = client.createOption(
+			"emoji",
+			["role_id"],
+			"You got a role", // add message
+			"removed role", // remove message
+		);
+
+		// create message
+		client.createMessage(
+			"channel_id",
+			"message_id",
+			1, // reaction limit
+			new_option,
+			new_option_2,
+		);
+	}
+});
 ```
 
-## Useful Links
+# Useful Links
 
 -   Discord: https://bariscodes.me/discord
 -   Github: https://github.com/barbarbar338/reaction-role/
 -   NPM: https://www.npmjs.com/package/reaction-role
--   Docs: https://reactionrole.bariscodes.me/
 
-## [Contact Me For More Help](https://bariscodes.me/discord)
+# [Contact Me For More Help](https://bariscodes.me/discord)
 
 \ ゜ o ゜)ノ

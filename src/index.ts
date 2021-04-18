@@ -1,235 +1,240 @@
-import {
-	Client,
-	MessageReaction,
-	PermissionString,
-	TextChannel,
-} from "discord.js";
-import { Database, adapters } from "bookman";
+import { adapters, Database } from "bookman/dist";
+import { Client, GuildMember, TextChannel } from "discord.js";
+import { set, unset, merge, has, get } from "lodash";
+import * as pogger from "pogger";
 
-export interface IOptionData {
+export interface IEmoji {
 	emoji: string;
-	addMessage: string;
-	removeMessage: string;
+	add_message?: string;
+	remove_message?: string;
 	roles: string[];
 }
 
-export interface IMessageData {
-	messageID: string;
-	channelID: string;
+export interface IMessage {
+	channel_id: string;
+	message_id: string;
 	limit: number;
-	restrictions?: PermissionString[];
-	reactions: IOptionData[];
+	emojis: IEmoji[];
 }
 
 export interface IConfig {
-	[messageID: string]: IMessageData;
+	[message_id: string]: IMessage;
 }
 
 export class ReactionRole extends Client {
 	private _token: string;
-	private database: Database;
+	private mongodb_uri?: string;
+	private config: IConfig = {};
+	private db?: Database;
+	private logging: boolean;
 	private ready = false;
 
-	constructor(token: string, mongodb_uri?: string) {
-		super();
+	constructor(token: string, mongodb_uri?: string, logging = true) {
+		super({
+			partials: ["CHANNEL", "REACTION", "MESSAGE"],
+		});
 		this._token = token;
-		let adapter;
-		if (mongodb_uri)
-			adapter = new adapters.MongoDB({
+		this.mongodb_uri = mongodb_uri;
+		this.logging = logging;
+		if (mongodb_uri) {
+			const adapter = new adapters.MongoDB({
 				databaseName: "RR",
 				defaultDir: "ReactionRole",
 				mongodbURL: mongodb_uri,
 			});
-		else
-			adapter = new adapters.FS({
-				databaseName: "RR",
-				defaultDir: "ReactionRole",
-			});
-		this.database = new Database(adapter);
+			this.db = new Database(adapter);
+		}
 	}
 
 	public createOption(
 		emoji: string,
-		addMessage: string,
-		removeMessage: string,
 		roles: string[],
-	): IOptionData {
+		add_message?: string,
+		remove_message?: string,
+	): IEmoji {
 		return {
 			emoji,
-			addMessage,
-			removeMessage,
 			roles,
+			add_message,
+			remove_message,
 		};
 	}
 
 	public async createMessage(
-		messageID: string,
-		channelID: string,
+		channel_id: string,
+		message_id: string,
 		limit: number,
-		restrictions: PermissionString[],
-		...reactions: IOptionData[]
-	): Promise<IMessageData> {
-		const data: IMessageData = {
-			messageID,
-			channelID,
+		...emojis: IEmoji[]
+	): Promise<IMessage> {
+		const message: IMessage = {
+			channel_id,
+			emojis,
+			message_id,
 			limit,
-			restrictions,
-			reactions,
 		};
-		await this.database.set(messageID, data);
-		return data;
+		set(this.config, message_id, message);
+		if (this.db) await this.db.set(`config.${message_id}`, message);
+		return message;
 	}
 
-	public async deleteMessage(messageID: string): Promise<IConfig> {
-		await this.database.delete(messageID);
-		return this.exportConfig();
+	public async deleteMessage(message_id: string): Promise<IConfig> {
+		unset(this.config, message_id);
+		if (this.db) await this.db.delete(`config.${message_id}`);
+		return this.config;
 	}
 
 	public async importConfig(config: IConfig): Promise<IConfig> {
-		for (const data in config) {
-			const messageData = config[data];
-			await this.database.set(messageData.messageID, messageData);
+		merge(this.config, config);
+		if (this.db) {
+			const saved = await this.db.get("config");
+			merge(saved, this.config);
+			await this.db.set("config", saved);
 		}
-		return this.exportConfig();
+		return this.config;
 	}
 
-	public async exportConfig(): Promise<IConfig> {
-		const data = ((await this.database.fetchAll()) as unknown) as IConfig;
-		return data;
-	}
+	public exportConfig = (): IConfig => this.config;
 
 	public async init(): Promise<string> {
-		console.info("[ReactionRole] Spawned.");
+		if (this.logging)
+			pogger.event("[ReactionRole]: Spawning ReactionRole...");
+
 		this.on("ready", async () => {
-			let messages = await this.exportConfig();
-			console.info(
-				`[ReactionRole] Fetching ${
-					Object.keys(messages).length
-				} messages.`,
-			);
-			for (const messageID in messages) {
-				const messageData = messages[messageID];
-				const channel = this.channels.cache.get(
-					messageData.channelID,
-				) as TextChannel;
-				if (!channel) {
-					this.database.delete(messageID);
+			if (this.logging)
+				pogger.info(`[ReactionRole]: Logged in as ${this.user?.tag}!`);
+			if (this.db) {
+				pogger.event("[ReactionRole]: Loading data from database.");
+				const saved = (await this.db.get("config")) as IConfig;
+				pogger.info(
+					`[ReactionRole]: Importing ${
+						Object.keys(saved).length
+					} messages...`,
+				);
+				this.importConfig(saved);
+				pogger.success(
+					`[ReactionRole]: Successfully imported ${
+						Object.keys(saved).length
+					} messages!`,
+				);
+			}
+			if (this.logging)
+				pogger.event("[ReactionROle]: Fetching messages.");
+			if (this.logging)
+				pogger.info(
+					`[ReactionRole]: Fetching ${
+						Object.keys(this.config).length
+					} messages...`,
+				);
+			for (const message_id in this.config) {
+				const message = this.config[message_id];
+				const channel = (await this.channels.fetch(
+					message.channel_id,
+				)) as TextChannel;
+				if (!channel || channel.type != "text") {
+					this.deleteMessage(message.message_id);
 					continue;
 				}
-				const guild = channel.guild;
-				if (!guild) {
-					this.database.delete(messageID);
+				const msg = await channel.messages.fetch(message.message_id);
+				if (!msg || msg.deleted) {
+					this.deleteMessage(message.message_id);
 					continue;
 				}
-				const message = await channel.messages
-					.fetch(messageID)
-					.catch(() => {
-						this.database.delete(messageID);
-					});
-				if (!message) continue;
-				for (let i = 0; i < messageData.reactions.length; i++) {
-					const option = messageData.reactions[i];
-					const newAddRoles: string[] = [];
-					for (const role of option.roles) {
-						if (guild.roles.cache.has(role)) newAddRoles.push(role);
-					}
-					let updated = false;
-					if (option.roles.length != newAddRoles.length) {
-						option.roles = newAddRoles;
-						updated = true;
-					}
-					if (updated) {
-						messageData.reactions[i].roles = newAddRoles;
-						this.database.set(
-							`${messageID}.reactions`,
-							messageData.reactions,
-						);
-					}
-					if (!message.reactions.cache.has(option.emoji))
-						await message.react(option.emoji);
+				for (const emoji of message.emojis) {
+					if (
+						!msg.reactions.cache.has(emoji.emoji) ||
+						!msg.reactions.cache
+							.get(emoji.emoji)
+							?.users.cache.has(this.user?.id as string)
+					)
+						await msg.react(emoji.emoji);
 				}
 			}
-			messages = await this.exportConfig();
-			console.info(
-				`[ReactionRole] Fetched ${
-					Object.keys(messages).length
-				} messages.`,
-			);
-			console.info(
-				`[ReactionRole] Ready and logged in as ${this.user?.tag} (${this.user?.id})`,
-			);
+			if (this.logging)
+				pogger.success(
+					`[ReactionRole]: Successfully fetched ${
+						Object.keys(this.config).length
+					} messages!`,
+				);
 			this.ready = true;
-		}).on("raw", async (packet) => {
-			if (
-				!this.ready ||
-				(packet.t != "MESSAGE_REACTION_ADD" &&
-					packet.t != "MESSAGE_REACTION_REMOVE")
-			)
-				return;
-			const messageData = (await this.database.get(
-				packet.d.message_id,
-			)) as IMessageData;
-			if (!messageData) return;
-			const guild = this.guilds.cache.get(packet.d.guild_id);
-			if (!guild) return;
-			for (const option of messageData.reactions) {
-				for (const id of option.roles) {
-					const role = guild.roles.cache.get(id);
-					if (!role) return;
-				}
-			}
-			const member =
-				guild.members.cache.get(packet.d.user_id) ||
-				(await guild.members.fetch(packet.d.user_id));
-			if (!member) return;
-			if (
-				messageData.restrictions &&
-				!member.permissions.has(messageData.restrictions)
-			)
-				return;
-			const channel = guild.channels.cache.get(
-				packet.d.channel_id,
-			) as TextChannel;
-			if (!channel) return;
-			const message =
-				channel.messages.cache.get(packet.d.message_id) ||
-				(await channel.messages.fetch(packet.d.message_id));
-			if (!message) return;
-			const option = messageData.reactions.find(
-				(o) =>
-					o.emoji === packet.d.emoji.name ||
-					o.emoji === packet.d.emoji.id,
-			);
-			if (!option) return;
-			const reaction = message.reactions.cache.get(
-				option.emoji,
-			) as MessageReaction;
-			if (!reaction) await message.react(option.emoji);
-			if (packet.t === "MESSAGE_REACTION_ADD") {
-				let userReactions = 0;
-				for (const r of message.reactions.cache.array()) {
-					const users = await r.users.fetch();
-					if (users.has(member.id)) userReactions++;
-				}
-				if (userReactions > messageData.limit) return;
-				await member.roles.add(option.roles);
-				if (option.addMessage)
-					await member.send(option.addMessage).catch(() => undefined);
-			} else {
-				await member.roles.remove(option.roles);
-				if (option.removeMessage)
-					await member
-						.send(option.removeMessage)
-						.catch(() => undefined);
-			}
+			if (this.logging) pogger.success("[ReactionRole]: Ready 🚀!");
 		});
-		return this.login(this._token);
+
+		this.on("messageReactionAdd", async (reaction, user) => {
+			if (!this.ready) return;
+			if (reaction.partial) reaction = await reaction.fetch();
+			if (!reaction.message.guild) return;
+			if (user.partial) user = await user.fetch();
+			if (!reaction.message.guild.members.cache.has(user.id)) return;
+			if (!has(this.config, reaction.message.id)) return;
+			const message = get(this.config, reaction.message.id);
+
+			if (message.limit > 0) {
+				const reactions = reaction.message.reactions.cache.filter(
+					(r) =>
+						message.emojis.some(
+							(emoji) =>
+								emoji.emoji == (r.emoji.id || r.emoji.name),
+						) && r.users.cache.has(user.id),
+				);
+				if (reactions.size > message.limit)
+					return await reaction.users.remove(user.id);
+			}
+
+			const emoji = message.emojis.find(
+				(emoji) =>
+					emoji.emoji == (reaction.emoji.id || reaction.emoji.name),
+			);
+			if (!emoji) return;
+			const member = reaction.message.guild?.member(
+				user.id,
+			) as GuildMember;
+			const roles_to_add = emoji.roles.filter(
+				(id) => !member.roles.cache.has(id),
+			);
+			if (roles_to_add.length < 1) return;
+			await member.roles.add(roles_to_add);
+			if (emoji.add_message)
+				await member.send(emoji.add_message).catch(() => undefined);
+		});
+
+		this.on("messageReactionRemove", async (reaction, user) => {
+			if (!this.ready) return;
+			if (reaction.partial) reaction = await reaction.fetch();
+			if (!reaction.message.guild) return;
+			if (user.partial) user = await user.fetch();
+			if (!reaction.message.guild.members.cache.has(user.id)) return;
+			if (!has(this.config, reaction.message.id)) return;
+			const message = get(this.config, reaction.message.id);
+			const emoji = message.emojis.find(
+				(emoji) =>
+					emoji.emoji == (reaction.emoji.id || reaction.emoji.name),
+			);
+			if (!emoji) return;
+			const member = reaction.message.guild?.member(
+				user.id,
+			) as GuildMember;
+			const roles_to_remove = emoji.roles.filter((id) =>
+				member.roles.cache.has(id),
+			);
+			if (roles_to_remove.length < 1) return;
+			await member.roles.remove(roles_to_remove);
+			if (emoji.remove_message)
+				await member.send(emoji.remove_message).catch(() => undefined);
+		});
+
+		const token = await this.login(this._token);
+		if (this.logging)
+			pogger.success(
+				"[ReactionRole]: ReactionRole spawned successfully!",
+			);
+		return token;
 	}
 
 	public async reInit(): Promise<ReactionRole> {
 		this.destroy();
-		const system = new ReactionRole(this._token);
-		await system.init();
-		return system;
+		const rr = new ReactionRole(this._token, this.mongodb_uri);
+		await rr.importConfig(this.config);
+		await rr.init();
+		return rr;
 	}
 }
