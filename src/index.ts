@@ -127,14 +127,16 @@ export class ReactionRole extends Client {
 				);
 			for (const message_id in this.config) {
 				const message = this.config[message_id];
-				const channel = (await this.channels.fetch(
-					message.channel_id,
-				)) as TextChannel;
+				const channel = (await this.channels
+					.fetch(message.channel_id)
+					.catch(() => undefined)) as TextChannel | undefined;
 				if (!channel || channel.type != "text") {
 					this.deleteMessage(message.message_id);
 					continue;
 				}
-				const msg = await channel.messages.fetch(message.message_id);
+				const msg = await channel.messages
+					.fetch(message.message_id)
+					.catch(() => undefined);
 				if (!msg || msg.deleted) {
 					this.deleteMessage(message.message_id);
 					continue;

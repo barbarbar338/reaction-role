@@ -19,7 +19,7 @@
 	},
 	"main": "dist",
 	"name": "reaction-role",
-	"version": "4.0.1",
+	"version": "4.0.2",
 	"description": "ReactionRole is a module that allows you to create Discord reaction role easily!",
 	"scripts": {
 		"prebuild": "rimraf dist",
