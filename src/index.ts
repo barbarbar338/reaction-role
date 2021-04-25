@@ -1,4 +1,4 @@
-import { adapters, Database } from "bookman/dist";
+import { adapters, Database } from "bookman";
 import { Client, GuildMember, TextChannel } from "discord.js";
 import { set, unset, merge, has, get } from "lodash";
 import * as pogger from "pogger";
@@ -105,17 +105,19 @@ export class ReactionRole extends Client {
 			if (this.db) {
 				pogger.event("[ReactionRole]: Loading data from database.");
 				const saved = (await this.db.get("config")) as IConfig;
-				pogger.info(
-					`[ReactionRole]: Importing ${
-						Object.keys(saved).length
-					} messages...`,
-				);
-				this.importConfig(saved);
-				pogger.success(
-					`[ReactionRole]: Successfully imported ${
-						Object.keys(saved).length
-					} messages!`,
-				);
+				if (saved) {
+					pogger.info(
+						`[ReactionRole]: Importing ${
+							Object.keys(saved).length
+						} messages...`,
+					);
+					this.importConfig(saved);
+					pogger.success(
+						`[ReactionRole]: Successfully imported ${
+							Object.keys(saved).length
+						} messages!`,
+					);
+				} else pogger.warning("[ReactionRole]: Database is empty.");
 			}
 			if (this.logging)
 				pogger.event("[ReactionROle]: Fetching messages.");
