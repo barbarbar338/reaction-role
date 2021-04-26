@@ -21,13 +21,19 @@ export interface IConfig {
 	[message_id: string]: IMessage;
 }
 
+export type TOnGetFN = () => Promise<IConfig | undefined>;
+export type TOnSetFN = (new_data: IConfig) => Promise<void>;
+export type TOnDeleteFN = (message_id: string) => Promise<void>;
+
 export class ReactionRole extends Client {
 	private _token: string;
 	private mongodb_uri?: string;
 	private config: IConfig = {};
-	private db?: Database;
 	private logging: boolean;
 	private ready = false;
+	private on_get?: TOnGetFN;
+	private on_set?: TOnSetFN;
+	private on_delete?: TOnDeleteFN;
 
 	constructor(token: string, mongodb_uri?: string, logging = true) {
 		super({
@@ -42,8 +48,33 @@ export class ReactionRole extends Client {
 				defaultDir: "ReactionRole",
 				mongodbURL: mongodb_uri,
 			});
-			this.db = new Database(adapter);
+			const db = new Database(adapter);
+			this.onGet(async () => {
+				const data = (await db.get("config")) as IConfig;
+				return data;
+			})
+				.onSet(async (new_data) => {
+					await db.set("config", new_data);
+				})
+				.onDelete(async (message_id) => {
+					await db.delete(`config.${message_id}`);
+				});
 		}
+	}
+
+	public onGet(on_get: TOnGetFN): ReactionRole {
+		this.on_get = on_get;
+		return this;
+	}
+
+	public onSet(on_set: TOnSetFN): ReactionRole {
+		this.on_set = on_set;
+		return this;
+	}
+
+	public onDelete(on_delete: TOnDeleteFN): ReactionRole {
+		this.on_delete = on_delete;
+		return this;
 	}
 
 	public createOption(
@@ -73,22 +104,24 @@ export class ReactionRole extends Client {
 			limit,
 		};
 		set(this.config, message_id, message);
-		if (this.db) await this.db.set(`config.${message_id}`, message);
+		if (this.on_set) await this.on_set(this.config);
 		return message;
 	}
 
 	public async deleteMessage(message_id: string): Promise<IConfig> {
 		unset(this.config, message_id);
-		if (this.db) await this.db.delete(`config.${message_id}`);
+		if (this.on_delete) await this.on_delete(message_id);
 		return this.config;
 	}
 
 	public async importConfig(config: IConfig): Promise<IConfig> {
 		merge(this.config, config);
-		if (this.db) {
-			const saved = await this.db.get("config");
+		if (this.on_get) {
+			const saved = (await this.on_get()) || {};
 			merge(saved, this.config);
-			await this.db.set("config", saved);
+			if (this.on_set) {
+				await this.on_set(saved);
+			}
 		}
 		return this.config;
 	}
@@ -102,9 +135,9 @@ export class ReactionRole extends Client {
 		this.on("ready", async () => {
 			if (this.logging)
 				pogger.info(`[ReactionRole]: Logged in as ${this.user?.tag}!`);
-			if (this.db) {
+			if (this.on_get) {
 				pogger.event("[ReactionRole]: Loading data from database.");
-				const saved = (await this.db.get("config")) as IConfig;
+				const saved = (await this.on_get()) as IConfig;
 				if (saved) {
 					pogger.info(
 						`[ReactionRole]: Importing ${

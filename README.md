@@ -111,6 +111,52 @@ client.on("message", (message) => {
 });
 ```
 
+# Using Custom Databases
+
+You can change get, save and delete events of system with `<ReactionRole>.onGet(TOnGetFN)`, `<ReactionRole>.onSet(TOnSetFN)` and `<ReactionRole>.onDelete(TOnDeleteFN)` methods. Here is an example with `quick.db`:
+
+```js
+const { ReactionRole } = require("reaction-role");
+const system = new ReactionRole("YOUR_BOT_TOKEN");
+
+// SETTING CUSTOM DATABASE START
+const db = require("quick.db");
+system
+	.onGet(async () => {
+		const saved = (await db.get("reaction_roles")) || {};
+		return saved;
+	})
+	.onSet(async (data) => {
+		await db.set("reaction_roles", data);
+	})
+	.onDelete(async (message_id) => {
+		await db.delete(`reaction_roles.${message_id}`);
+	});
+// SETTING CUSTOM DATABASE END
+
+// NORMAL REACTION-ROLE CODE
+const option1 = system.createOption("emoji", ["role_id", "role_id"]);
+
+// create option with messages
+const option2 = system.createOption(
+	"emoji",
+	["role_id"],
+	"You got a role", // add message
+	"removed role", // remove message
+);
+
+// create message
+system.createMessage(
+	"channel_id",
+	"message_id",
+	1, // reaction limit
+	option1,
+	option2,
+);
+
+system.init();
+```
+
 # Useful Links
 
 -   Discord: https://bariscodes.me/discord
