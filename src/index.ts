@@ -1,5 +1,5 @@
 import { adapters, Database } from "bookman";
-import { Client, GuildMember, TextChannel } from "discord.js";
+import { Client, GuildMember, TextChannel, Util } from "discord.js";
 import { set, unset, merge, has, get } from "lodash";
 import * as pogger from "pogger";
 
@@ -14,6 +14,7 @@ export interface IMessage {
 	channel_id: string;
 	message_id: string;
 	limit: number;
+	type: "regular" | "once" | "remove" | "voice";
 	emojis: IEmoji[];
 }
 
@@ -83,8 +84,10 @@ export class ReactionRole extends Client {
 		add_message?: string,
 		remove_message?: string,
 	): IEmoji {
+		const parsed = Util.parseEmoji(emoji);
+		if (!parsed) throw new Error("Valid emoji expected");
 		return {
-			emoji,
+			emoji: parsed.id || parsed.name,
 			roles,
 			add_message,
 			remove_message,
@@ -102,6 +105,7 @@ export class ReactionRole extends Client {
 			emojis,
 			message_id,
 			limit,
+			type: "regular",
 		};
 		set(this.config, message_id, message);
 		if (this.on_set) await this.on_set(this.config);
