@@ -275,7 +275,6 @@ export class ReactionRole extends Client {
 		this.destroy();
 		const rr = new ReactionRole(this._token, this.mongodb_uri);
 		await rr.importConfig(this.config);
-		await rr.init();
 		return rr;
 	}
 }
