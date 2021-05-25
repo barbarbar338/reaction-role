@@ -159,7 +159,7 @@ system.init();
 
 # Useful Links
 
--   Discord: https://bariscodes.me/discord
+-   Discord: https://barbarbar338.fly.dev/discord
 -   Github: https://github.com/barbarbar338/reaction-role/
 -   NPM: https://www.npmjs.com/package/reaction-role
 
