@@ -1,4 +1,4 @@
-import { adapters, Database } from "bookman";
+import { Database, MongoDBAdapter } from "bookman";
 import { Client, GuildMember, TextChannel, Util } from "discord.js";
 import { set, unset, merge, has, get } from "lodash";
 import * as pogger from "pogger";
@@ -44,7 +44,7 @@ export class ReactionRole extends Client {
 		this.mongodb_uri = mongodb_uri;
 		this.logging = logging;
 		if (mongodb_uri) {
-			const adapter = new adapters.MongoDB({
+			const adapter = new MongoDBAdapter({
 				databaseName: "RR",
 				defaultDir: "ReactionRole",
 				mongodbURL: mongodb_uri,
