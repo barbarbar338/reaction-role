@@ -1,21 +1,21 @@
 {
 	"dependencies": {
-		"bookman": "^3.2.1",
+		"bookman": "^3.3.2",
 		"discord.js": "^12.5.3",
 		"lodash": "^4.17.21",
 		"pogger": "^0.0.8"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.14.168",
-		"@types/node": "^15.0.1",
-		"@typescript-eslint/eslint-plugin": "^4.22.0",
-		"@typescript-eslint/parser": "^4.22.0",
-		"eslint": "^7.25.0",
+		"@types/lodash": "^4.14.170",
+		"@types/node": "^15.12.2",
+		"@typescript-eslint/eslint-plugin": "^4.26.1",
+		"@typescript-eslint/parser": "^4.26.1",
+		"eslint": "^7.28.0",
 		"onchange": "^7.1.0",
-		"prettier": "^2.2.1",
+		"prettier": "^2.3.1",
 		"rimraf": "^3.0.2",
-		"ts-node": "^9.1.1",
-		"typescript": "^4.2.4"
+		"ts-node": "^10.0.0",
+		"typescript": "^4.3.2"
 	},
 	"main": "dist",
 	"name": "reaction-role",
@@ -38,7 +38,12 @@
 		"emoji",
 		"role",
 		"emoji-role",
-		"rr"
+		"rr",
+		"mongo",
+		"mongoose",
+		"mongodb",
+		"db",
+		"permanent"
 	],
 	"author": {
 		"email": "demirci.baris38@gmail.com",
