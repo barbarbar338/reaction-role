@@ -66,6 +66,8 @@ export class ReactionRole extends Client {
 		this.logging = logging;
 		this.database = new Database(db);
 		this._db_config = db;
+
+		// TODO: implement new config style
 		this.on_get = () => this.database.get("config");
 		this.on_delete = (message_id) =>
 			this.database.delete(`config.${message_id}`);
