@@ -1,32 +1,32 @@
 {
-	"reactions": [
-		{
+	"Use your prefix for reactions here, see types.ts/IDBConfig": {
+		"message_id": {
 			"channel_id": "channel_id",
 			"message_id": "message_id",
 			"limit": 1,
-			"emojis": [
+			"clickables": [
 				{
-					"emoji": "emoji_or_emoji_id",
+					"clickable_id": "emoji_or_emoji_id",
 					"add_message": "add_message_not_required",
 					"remove_message": "remove_message_not_required",
 					"roles": ["role_id_one", "role_id_two"]
 				}
 			]
 		}
-	],
-	"buttons": [
-		{
+	},
+	"Use your prefix for buttons here, see types.ts/IDBConfig": {
+		"message_id": {
 			"channel_id": "channel_id",
 			"message_id": "message_id",
 			"limit": 1,
-			"buttons": [
+			"clickables": [
 				{
-					"button_id": "button_id",
+					"clickable_id": "button_id",
 					"add_message": "add_message_not_required",
 					"remove_message": "remove_message_not_required",
 					"roles": ["role_id_one", "role_id_two"]
 				}
 			]
 		}
-	]
+	}
 }
