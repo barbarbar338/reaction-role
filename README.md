@@ -6,13 +6,10 @@
 ![license](https://img.shields.io/npm/l/reaction-role?style=for-the-badge)
 ![GitHub stars](https://img.shields.io/github/stars/barbarbar338/reaction-role?style=for-the-badge)
 
-**ReactionRole** is a module that allows you to create Discord reaction role easily!
-
-This module is compatible with all node.js discord wrappers (like discord.js, eris, discord.js-commando etc.)
-
-You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!
-
-Database support and TypeScript definitions are built-in
+-   **ReactionRole** is a module that allows you to create Discord reaction role easily!
+-   This module is compatible with all node.js discord wrappers (like discord.js, eris, discord.js-commando etc.)
+-   You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!
+-   Database support and TypeScript definitions are built-in!
 
 # IMPORTANT NOTE
 
@@ -26,89 +23,102 @@ You have to turn on "Server Members Intent" option to use this package properly.
 Simple example:
 
 ```js
-const { ReactionRole } = require("reaction-role");
-const system = new ReactionRole("YOUR_BOT_TOKEN");
+const { ReactionRole, EType } = require("reaction-role");
 
-// use a mongodb uri if you want persistent messages
-const system = new ReactionRole("YOUR_BOT_TOKEN", "MONGODB_URI");
+const client = new ReactionRole({
+	token: "YOUR_BOT_TOKEN",
+});
 
-// create simple option
-const option1 = system.createOption("emoji", ["role_id", "role_id"]);
+async function bootstrap() {
+	const option1 = client.createOption({
+		clickable_id: "EMOJI_ID",
+		roles: ["ROLE_ID"],
+		type: EType.NORMAL,
+	});
 
-// create option with messages
-const option2 = system.createOption(
-	"emoji",
-	["role_id"],
-	"You got a role", // add message
-	"removed role", // remove message
-);
+	const option2 = client.createOption({
+		clickable_id: "EMOJI_ID",
+		roles: ["ROLE_ID"],
+		type: EType.ONCE,
+	});
 
-// create message
-system.createMessage(
-	"channel_id",
-	"message_id",
-	1, // reaction limit
-	option1,
-	option2,
-);
+	await client.createMessage({
+		channel_id: "CHANNEL_ID",
+		clickables: [option1, option2],
+		message_id: "MESSAGE_ID",
+	});
 
-system.init();
+	client.init();
+}
+
+bootstrap();
 ```
 
 Creating new messages:
 
 ```js
-const { ReactionRole } = require("reaction-role");
-const client = new ReactionRole("YOUR_BOT_TOKEN");
-
-// use a mongodb uri if you want persistent messages
-const client = new ReactionRole("YOUR_BOT_TOKEN", "MONGODB_URI");
-
-// create simple option
-const option1 = client.createOption("emoji", ["role_id", "role_id"]);
-
-// create option with messages
-const option2 = client.createOption(
-	"emoji",
-	["role_id"],
-	"You got a role", // add message
-	"removed role", // remove message
-);
-
-// create message
-client.createMessage(
-	"channel_id",
-	"message_id",
-	1, // reaction limit
-	option1,
-	option2,
-);
-
-client.init();
-
 client.on("message", (message) => {
 	if (message.content == "!create") {
-		// create simple option
-		const new_option = client.createOption("emoji", ["role_id", "role_id"]);
+		// you can take any user input and use it to create new option and message
 
-		// create option with messages
-		const new_option_2 = client.createOption(
-			"emoji",
-			["role_id"],
-			"You got a role", // add message
-			"removed role", // remove message
-		);
+		// create a simple option
+		const option = client.createOption({
+			clickable_id: "EMOJI_ID",
+			roles: ["ROLE_ID"],
+			type: EType.NORMAL,
+		});
 
-		// create message
-		client.createMessage(
-			"channel_id",
-			"message_id",
-			1, // reaction limit
-			new_option,
-			new_option_2,
-		);
+		await client.createMessage({
+			channel_id: "CHANNEL_ID",
+			clickables: [option],
+			message_id: "MESSAGE_ID",
+		});
+
+		// and you are done! New message and options are added to system
 	}
 });
+```
+
+# Execute Custom Code
+
+You can execute your own code when a user clicks on a reaction. You can do this by using clickable type `EType.CUSTOM`.
+
+```js
+const { ReactionRole, EType } = require("reaction-role");
+
+const client = new ReactionRole({
+	token: "YOUR_BOT_TOKEN",
+});
+
+async function bootstrap() {
+	const option = client.createOption({
+		clickable_id: "EMOJI_ID",
+		roles: ["ROLE_ID"],
+
+		// These lines are important! everything else is same as normal
+		type: EType.CUSTOM,
+		onClick: (clickable, member) => {
+			console.log(
+				member.user.username + " clicked on " + clickable.clickable_id,
+			);
+		},
+		onRemove: (clickable, member) => {
+			console.log(
+				member.user.username + " removed " + clickable.clickable_id,
+			);
+		},
+	});
+
+	await client.createMessage({
+		channel_id: "CHANNEL_ID",
+		clickables: [option],
+		message_id: "MESSAGE_ID",
+	});
+
+	client.init();
+}
+
+bootstrap();
 ```
 
 # Using Custom Databases
@@ -116,12 +126,18 @@ client.on("message", (message) => {
 You can change get, save and delete events of system with `<ReactionRole>.onGet(TOnGetFN)`, `<ReactionRole>.onSet(TOnSetFN)` and `<ReactionRole>.onDelete(TOnDeleteFN)` methods. Here is an example with `quick.db`:
 
 ```js
-const { ReactionRole } = require("reaction-role");
-const system = new ReactionRole("YOUR_BOT_TOKEN");
+const { ReactionRole, EType } = require("reaction-role");
+
+const client = new ReactionRole({
+	token: "YOUR_BOT_TOKEN",
+});
 
 // SETTING CUSTOM DATABASE START
+// choose your favourite database module
 const db = require("quick.db");
-system
+
+// update save events
+client
 	.onGet(async () => {
 		const saved = (await db.get("reaction_roles")) || {};
 		return saved;
@@ -134,35 +150,15 @@ system
 	});
 // SETTING CUSTOM DATABASE END
 
-// NORMAL REACTION-ROLE CODE
-const option1 = system.createOption("emoji", ["role_id", "role_id"]);
-
-// create option with messages
-const option2 = system.createOption(
-	"emoji",
-	["role_id"],
-	"You got a role", // add message
-	"removed role", // remove message
-);
-
-// create message
-system.createMessage(
-	"channel_id",
-	"message_id",
-	1, // reaction limit
-	option1,
-	option2,
-);
-
-system.init();
+// ... use it as normal
 ```
 
 # Useful Links
 
--   Discord: https://barbarbar338.fly.dev/discord
+-   Discord: https://338.rocks/discord
 -   Github: https://github.com/barbarbar338/reaction-role/
 -   NPM: https://www.npmjs.com/package/reaction-role
 
-# [Contact Me For More Help](https://bariscodes.me/discord)
+# [Contact Me For More Help](https://338.rocks/discord)
 
 \ ゜ o ゜)ノ
