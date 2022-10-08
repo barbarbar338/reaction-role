@@ -1,4 +1,5 @@
 import { BookmanOptions } from "bookman";
+import { GuildMember } from "discord.js";
 
 export interface IDBOptions extends BookmanOptions {
 	prefix: string;
@@ -21,6 +22,7 @@ export enum EType {
 	NORMAL,
 	ONCE,
 	REMOVE,
+	CUSTOM,
 }
 
 export interface IClickable {
@@ -28,13 +30,15 @@ export interface IClickable {
 	remove_message?: string;
 	roles: string[];
 	type: EType;
+	onClick?: TClickableFN;
+	onRemove?: TClickableFN;
 	clickable_id: string;
 }
 
 export interface IMessage {
 	channel_id: string;
 	message_id: string;
-	limit: number;
+	limit?: number;
 	clickables: IClickable[];
 }
 
@@ -42,6 +46,7 @@ export interface IConfig {
 	[message_id: string]: IMessage;
 }
 
+export type TClickableFN = (clickable: IClickable, member: GuildMember) => any;
 export type TOnGetFN = () => IConfig | Promise<IConfig> | undefined;
 export type TOnSetFN = (
 	config: IConfig,

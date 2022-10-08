@@ -7,10 +7,10 @@
 	},
 	"devDependencies": {
 		"@types/lodash": "^4.14.186",
-		"@types/node": "^16.11.62",
-		"@typescript-eslint/eslint-plugin": "^5.38.1",
-		"@typescript-eslint/parser": "^5.38.1",
-		"eslint": "^8.24.0",
+		"@types/node": "^18.8.3",
+		"@typescript-eslint/eslint-plugin": "^5.39.0",
+		"@typescript-eslint/parser": "^5.39.0",
+		"eslint": "^8.25.0",
 		"onchange": "^7.1.0",
 		"prettier": "^2.7.1",
 		"rimraf": "^3.0.2",
@@ -20,7 +20,7 @@
 	},
 	"main": "dist",
 	"name": "reaction-role",
-	"version": "4.2.0",
+	"version": "5.0.0",
 	"description": "ReactionRole is a module that allows you to create Discord reaction role easily!",
 	"scripts": {
 		"prebuild": "rimraf dist",
@@ -48,9 +48,9 @@
 		"permanent"
 	],
 	"author": {
-		"email": "demirci.baris38@gmail.com",
+		"email": "hi@338.rocks",
 		"name": "Barış DEMİRCİ",
-		"url": "https://barbarbar338.fly.dev/"
+		"url": "https://338.rocks"
 	},
 	"license": "MIT",
 	"repository": {

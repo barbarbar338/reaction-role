@@ -10,10 +10,12 @@ import {
 	IConstructorOptions,
 	IDBOptions,
 	IMessage,
+	TClickableFN,
 	TOnDeleteEvent,
 	TOnGetFN,
 	TOnSetFN,
 } from "./types";
+import { parseFunction, stringifyFunction } from "./utils";
 
 export class ReactionRole extends Client {
 	public logger = new Logger("ReactionRole");
@@ -70,37 +72,25 @@ export class ReactionRole extends Client {
 		return this;
 	}
 
-	public createOption = (
-		clickable_id: string,
-		type: EType,
-		roles: string[],
-		add_message?: string,
-		remove_message?: string,
-	): IClickable => ({
-		clickable_id,
-		roles,
-		type,
-		add_message,
-		remove_message,
-	});
+	public createOption = (clickable: IClickable): IClickable => clickable;
 
-	public async createMessage(
-		channel_id: string,
-		message_id: string,
-		limit: number,
-		...clickables: IClickable[]
-	): Promise<IMessage> {
-		const message: IMessage = {
-			channel_id,
-			clickables,
-			message_id,
-			limit,
-		};
+	public async createMessage(message: IMessage): Promise<IMessage> {
+		const clone = { ...message };
+		for (const clickable of message.clickables) {
+			if (clickable.onClick)
+				(clickable.onClick as any) = stringifyFunction(
+					clickable.onClick,
+				);
+			if (clickable.onRemove)
+				(clickable.onRemove as any) = stringifyFunction(
+					clickable.onRemove,
+				);
+		}
 
-		set(this.config, message_id, message);
+		set(this.config, message.message_id, message);
 		if (this.on_set) await this.on_set(this.config);
 
-		return message;
+		return clone;
 	}
 
 	public async deleteMessage(message_id: string): Promise<IConfig> {
@@ -170,7 +160,7 @@ export class ReactionRole extends Client {
 					this.deleteMessage(message.message_id);
 					continue;
 				}
-
+				new Function();
 				const msg = await channel.messages
 					.fetch(message.message_id)
 					.catch(() => undefined);
@@ -227,7 +217,7 @@ export class ReactionRole extends Client {
 				user.id,
 			) as GuildMember;
 
-			if (message.limit > 0) {
+			if (message.limit && message.limit > 0) {
 				const reactions = reaction.message.reactions.cache.filter(
 					(r) =>
 						message.clickables.some(
@@ -262,6 +252,14 @@ export class ReactionRole extends Client {
 				case EType.REMOVE:
 					await member.roles.remove(roles);
 					break;
+				case EType.CUSTOM:
+					await member.roles.add(roles);
+					if (clickable.onClick) {
+						const fn = parseFunction(
+							clickable.onClick as unknown as string,
+						);
+						fn(clickable, member);
+					}
 			}
 
 			if (clickable.add_message)
@@ -307,6 +305,14 @@ export class ReactionRole extends Client {
 				case EType.REMOVE:
 					await member.roles.add(roles);
 					break;
+				case EType.CUSTOM:
+					await member.roles.remove(roles);
+					if (clickable.onRemove) {
+						const fn = parseFunction(
+							clickable.onRemove as unknown as string,
+						);
+						fn(clickable, member);
+					}
 			}
 
 			if (clickable.remove_message)
