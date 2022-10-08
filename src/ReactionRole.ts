@@ -4,8 +4,10 @@ import { set, unset, merge, has, get } from "lodash";
 import { Logger } from "@hammerhq/logger";
 import {
 	default_db_config,
+	EType,
 	IClickable,
 	IConfig,
+	IConstructorOptions,
 	IDBOptions,
 	IMessage,
 	TOnDeleteEvent,
@@ -26,11 +28,7 @@ export class ReactionRole extends Client {
 	private on_set?: TOnSetFN;
 	private on_delete?: TOnDeleteEvent;
 
-	constructor(
-		token: string,
-		db_config: IDBOptions = default_db_config,
-		logging = true,
-	) {
+	constructor({ token, db_config, logging }: IConstructorOptions) {
 		super({
 			intents: [
 				"GuildEmojisAndStickers",
@@ -41,16 +39,17 @@ export class ReactionRole extends Client {
 			],
 		});
 
-		this._token = token;
-		this.logging = logging;
-		this.database = new Database(db_config);
-		this._db_config = db_config;
+		const cfg = merge(default_db_config || {}, db_config);
 
-		this.on_get = () => this.database.get(db_config.prefix);
+		this._token = token;
+		this.logging = logging || false;
+		this.database = new Database(cfg);
+		this._db_config = cfg;
+
+		this.on_get = () => this.database.get(cfg.prefix);
 		this.on_delete = (message_id) =>
-			this.database.delete(`${db_config.prefix}.${message_id}`);
-		this.on_set = (new_data) =>
-			this.database.set(db_config.prefix, new_data);
+			this.database.delete(`${cfg.prefix}.${message_id}`);
+		this.on_set = (new_data) => this.database.set(cfg.prefix, new_data);
 	}
 
 	public onGet(on_get: TOnGetFN): ReactionRole {
@@ -73,12 +72,14 @@ export class ReactionRole extends Client {
 
 	public createOption = (
 		clickable_id: string,
+		type: EType,
 		roles: string[],
 		add_message?: string,
 		remove_message?: string,
 	): IClickable => ({
 		clickable_id,
 		roles,
+		type,
 		add_message,
 		remove_message,
 	});
@@ -216,6 +217,16 @@ export class ReactionRole extends Client {
 
 			const message = get(this.config, reaction.message.id);
 
+			const clickable = message.clickables.find(
+				(clickable) =>
+					clickable.clickable_id ==
+					(reaction.emoji.id || reaction.emoji.name),
+			);
+			if (!clickable) return;
+			const member = reaction.message.guild?.members.cache.get(
+				user.id,
+			) as GuildMember;
+
 			if (message.limit > 0) {
 				const reactions = reaction.message.reactions.cache.filter(
 					(r) =>
@@ -233,24 +244,25 @@ export class ReactionRole extends Client {
 				}
 			}
 
-			const clickable = message.clickables.find(
-				(clickable) =>
-					clickable.clickable_id ==
-					(reaction.emoji.id || reaction.emoji.name),
+			const roles = clickable.roles.filter((id) =>
+				clickable.type == EType.REMOVE
+					? member.roles.cache.has(id)
+					: !member.roles.cache.has(id),
 			);
+			if (roles.length < 1) return;
 
-			if (!clickable) return;
-
-			const member = reaction.message.guild?.members.cache.get(
-				user.id,
-			) as GuildMember;
-			const roles_to_add = clickable.roles.filter(
-				(id) => !member.roles.cache.has(id),
-			);
-
-			if (roles_to_add.length < 1) return;
-
-			await member.roles.add(roles_to_add);
+			switch (clickable.type) {
+				case EType.NORMAL:
+					await member.roles.add(roles);
+					break;
+				case EType.ONCE:
+					await member.roles.add(roles);
+					await reaction.users.remove(member.id);
+					break;
+				case EType.REMOVE:
+					await member.roles.remove(roles);
+					break;
+			}
 
 			if (clickable.add_message)
 				await member.send(clickable.add_message).catch(() => undefined);
@@ -271,19 +283,31 @@ export class ReactionRole extends Client {
 					clickable.clickable_id ==
 					(reaction.emoji.id || reaction.emoji.name),
 			);
-
 			if (!clickable) return;
+
+			// işlem iptal ediliyor çünkü ONCE türündeki clickable componentlerde reaction otomatik olarak kaldırılıyor.
+			// bu yüzden reaction remove eventi tetikleniyor ve rolün tekrar kaldırılmaması gerekiyor.
+			if (clickable.type == EType.ONCE) return;
 
 			const member = reaction.message.guild?.members.cache.get(
 				user.id,
 			) as GuildMember;
-			const roles_to_remove = clickable.roles.filter((id) =>
-				member.roles.cache.has(id),
+			const roles = clickable.roles.filter((id) =>
+				clickable.type == EType.REMOVE
+					? !member.roles.cache.has(id)
+					: member.roles.cache.has(id),
 			);
 
-			if (roles_to_remove.length < 1) return;
+			if (roles.length < 1) return;
 
-			await member.roles.remove(roles_to_remove);
+			switch (clickable.type) {
+				case EType.NORMAL:
+					await member.roles.remove(roles);
+					break;
+				case EType.REMOVE:
+					await member.roles.add(roles);
+					break;
+			}
 
 			if (clickable.remove_message)
 				await member
@@ -302,7 +326,11 @@ export class ReactionRole extends Client {
 	public async reInit(): Promise<ReactionRole> {
 		this.destroy();
 
-		const rr = new ReactionRole(this._token, this._db_config, this.logging);
+		const rr = new ReactionRole({
+			token: this._token,
+			db_config: this._db_config,
+			logging: this.logging,
+		});
 
 		await rr.importConfig(this.config);
 

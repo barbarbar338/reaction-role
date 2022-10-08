@@ -4,6 +4,12 @@ export interface IDBOptions extends BookmanOptions {
 	prefix: string;
 }
 
+export interface IConstructorOptions {
+	token: string;
+	db_config?: IDBOptions;
+	logging?: boolean;
+}
+
 export const default_db_config: IDBOptions = {
 	databaseName: "reactionrole",
 	pretty: true,
@@ -11,10 +17,17 @@ export const default_db_config: IDBOptions = {
 	prefix: "reactions",
 };
 
+export enum EType {
+	NORMAL,
+	ONCE,
+	REMOVE,
+}
+
 export interface IClickable {
 	add_message?: string;
 	remove_message?: string;
 	roles: string[];
+	type: EType;
 	clickable_id: string;
 }
 

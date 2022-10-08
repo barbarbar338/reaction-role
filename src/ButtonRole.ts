@@ -1,4 +1,4 @@
-import { BookmanOptions, Database } from "bookman";
+/* import { BookmanOptions, Database } from "bookman";
 import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
 import { set, unset, merge, has, get } from "lodash";
 import { Logger } from "@hammerhq/logger";
@@ -221,3 +221,4 @@ export class ButtonRole extends Client {
 		return br;
 	}
 }
+ */

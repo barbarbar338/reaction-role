@@ -4,6 +4,7 @@
 			"channel_id": "channel_id",
 			"message_id": "message_id",
 			"limit": 1,
+			"type": 1,
 			"clickables": [
 				{
 					"clickable_id": "emoji_or_emoji_id",
@@ -19,6 +20,7 @@
 			"channel_id": "channel_id",
 			"message_id": "message_id",
 			"limit": 1,
+			"type": 1,
 			"clickables": [
 				{
 					"clickable_id": "button_id",
