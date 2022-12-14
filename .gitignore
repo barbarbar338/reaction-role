@@ -1,7 +1,2 @@
 node_modules
 dist
-
-# testing files
-data
-config.json
-index.js

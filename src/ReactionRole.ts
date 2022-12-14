@@ -1,7 +1,7 @@
-import { BookmanOptions, Database } from "bookman";
-import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
-import { set, unset, merge, has, get } from "lodash";
 import { Logger } from "@hammerhq/logger";
+import { Database } from "bookman";
+import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
+import { get, has, merge, set, unset } from "lodash";
 import {
 	default_db_config,
 	EType,
@@ -10,7 +10,6 @@ import {
 	IConstructorOptions,
 	IDBOptions,
 	IMessage,
-	TClickableFN,
 	TOnDeleteEvent,
 	TOnGetFN,
 	TOnSetFN,
@@ -18,7 +17,7 @@ import {
 import { parseFunction, stringifyFunction } from "./utils";
 
 export class ReactionRole extends Client {
-	public logger = new Logger("ReactionRole");
+	public logger = new Logger("[ReactionRole]:");
 	public ready = false;
 	public database: Database;
 	public config: IConfig = {};

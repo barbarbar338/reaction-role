@@ -15,7 +15,7 @@
 			]
 		}
 	},
-	"Use your prefix for buttons here, see types.ts/IDBConfig": {
+	"Use your prefix for buttons here, see types.ts/IDBConfig (Currently not supported)": {
 		"message_id": {
 			"channel_id": "channel_id",
 			"message_id": "message_id",
