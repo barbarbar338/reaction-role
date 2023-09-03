@@ -2,26 +2,26 @@
 	"dependencies": {
 		"@hammerhq/logger": "^0.1.5",
 		"bookman": "^4.0.0",
-		"discord.js": "^14.7.1",
+		"discord.js": "^14.13.0",
 		"lodash": "^4.17.21"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.14.191",
-		"@types/node": "^18.11.15",
-		"@typescript-eslint/eslint-plugin": "^5.46.1",
-		"@typescript-eslint/parser": "^5.46.1",
-		"eslint": "^8.29.0",
+		"@types/lodash": "^4.14.197",
+		"@types/node": "^20.5.9",
+		"@typescript-eslint/eslint-plugin": "^6.5.0",
+		"@typescript-eslint/parser": "^6.5.0",
+		"eslint": "^8.48.0",
 		"onchange": "^7.1.0",
-		"prettier": "^2.8.1",
-		"rimraf": "^3.0.2",
-		"taze": "^0.8.4",
+		"prettier": "^3.0.3",
+		"rimraf": "^5.0.1",
+		"taze": "^0.11.2",
 		"ts-node": "^10.9.1",
-		"typescript": "^4.9.4"
+		"typescript": "^5.2.2"
 	},
 	"main": "dist",
 	"name": "reaction-role",
-	"version": "5.0.1",
-	"description": "ReactionRole is a module that allows you to create Discord reaction role easily!",
+	"version": "6.0.0-beta.1",
+	"description": "ReactionRole is a module that allows you to create Discord reaction role easily! Now supports buttons and menus!",
 	"scripts": {
 		"prebuild": "rimraf dist",
 		"build": "tsc",
@@ -40,7 +40,11 @@
 		"emoji-role",
 		"rr",
 		"db",
-		"permanent"
+		"permanent",
+		"button",
+		"menu",
+		"select",
+		"interaction"
 	],
 	"author": {
 		"email": "hi@338.rocks",
