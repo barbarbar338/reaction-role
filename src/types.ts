@@ -25,6 +25,12 @@ export enum EType {
 	CUSTOM,
 }
 
+export enum EComponentType {
+	REACTION,
+	BUTTON,
+	MENU,
+}
+
 export interface IClickable {
 	add_message?: string;
 	remove_message?: string;
@@ -36,6 +42,7 @@ export interface IClickable {
 }
 
 export interface IMessage {
+	type: EComponentType;
 	channel_id: string;
 	message_id: string;
 	limit?: number;
