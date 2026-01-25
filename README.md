@@ -6,10 +6,10 @@
 ![license](https://img.shields.io/npm/l/reaction-role?style=for-the-badge)
 ![GitHub stars](https://img.shields.io/github/stars/barbarbar338/reaction-role?style=for-the-badge)
 
--   **ReactionRole** is a module that allows you to create Discord reaction role easily!
--   This module is compatible with all node.js discord wrappers (like discord.js, eris, discord.js-commando etc.)
--   You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!
--   Database support and TypeScript definitions are built-in!
+- **ReactionRole** is a module that allows you to create Discord reaction role easily!
+- This module is compatible with all node.js discord wrappers (like discord.js, eris, discord.js-commando etc.)
+- You also don't need to write any bot code if you want! You can also use this module alone. You just need a Discord Bot Token!
+- Database support and TypeScript definitions are built-in!
 
 # IMPORTANT NOTE
 
@@ -155,9 +155,9 @@ client
 
 # Useful Links
 
--   Discord: https://338.rocks/discord
--   Github: https://github.com/barbarbar338/reaction-role/
--   NPM: https://www.npmjs.com/package/reaction-role
+- Discord: https://338.rocks/discord
+- Github: https://github.com/barbarbar338/reaction-role/
+- NPM: https://www.npmjs.com/package/reaction-role
 
 # [Contact Me For More Help](https://338.rocks/discord)
 

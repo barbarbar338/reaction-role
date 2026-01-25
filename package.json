@@ -1,26 +1,26 @@
 {
 	"dependencies": {
-		"@hammerhq/logger": "^0.1.5",
+		"@hammerhq/logger": "^2.2.0",
 		"bookman": "^4.0.0",
-		"discord.js": "^14.7.1",
-		"lodash": "^4.17.21"
+		"discord.js": "^14.25.1",
+		"lodash": "^4.17.23"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.14.191",
-		"@types/node": "^18.11.15",
-		"@typescript-eslint/eslint-plugin": "^5.46.1",
-		"@typescript-eslint/parser": "^5.46.1",
-		"eslint": "^8.29.0",
+		"@types/lodash": "^4.17.23",
+		"@types/node": "^25.0.10",
+		"@typescript-eslint/eslint-plugin": "^8.53.1",
+		"@typescript-eslint/parser": "^8.53.1",
+		"eslint": "^9.39.2",
 		"onchange": "^7.1.0",
-		"prettier": "^2.8.1",
-		"rimraf": "^3.0.2",
-		"taze": "^0.8.4",
-		"ts-node": "^10.9.1",
-		"typescript": "^4.9.4"
+		"prettier": "^3.8.1",
+		"rimraf": "^6.1.2",
+		"taze": "^19.9.2",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.9.3"
 	},
 	"main": "dist",
 	"name": "reaction-role",
-	"version": "5.0.1",
+	"version": "5.2.0",
 	"description": "ReactionRole is a module that allows you to create Discord reaction role easily!",
 	"scripts": {
 		"prebuild": "rimraf dist",
@@ -49,7 +49,7 @@
 	},
 	"license": "MIT",
 	"repository": {
-		"url": "https://github.com/barisbored/reaction-role",
+		"url": "https://github.com/barbarbar338/reaction-role",
 		"type": "git"
 	},
 	"typings": "dist"

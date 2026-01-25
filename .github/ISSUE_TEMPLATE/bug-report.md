@@ -25,9 +25,9 @@ If applicable, add screenshots to help explain your problem.
 
 **Versions (please complete the following information):**
 
--   OS: [e.g. Win10]
--   ReactionRole Version: [e.g. 3.0.0]
--   NodeJS Version: [e.g. 15.0.1]
+- OS: [e.g. Win10]
+- ReactionRole Version: [e.g. 3.0.0]
+- NodeJS Version: [e.g. 15.0.1]
 
 **Additional context**
 Add any other context about the problem here.
